@@ -16,6 +16,39 @@ b. Bar Chart or Box Plot of the data
 c. Is the data correlated to the target variable (or to other variables?)
 d. Are any of the variables missing and need to be imputed “fixed”?
 
+## Loading the data:
+
+```{r "Libraries", message=FALSE}
+library(tidyverse)
+library(ggthemes)
+```
+
+```{r "loading data", message=FALSE}
+dfT <- read_csv('moneyball-training-data.csv')
+dfT <- dfT %>% select(-INDEX)
+glimpse(dfT)
+dfE <- read_csv('moneyball-evaluation-data.csv')
+dfE <- dfE %>% select(-INDEX)
+glimpse(dfE)
+```
+
+## Initial Vizualizaton:
+
+Special thanks to [this Stack Overflow question](https://stackoverflow.com/questions/13035834/plot-every-column-in-a-data-frame-as-a-histogram-on-one-page-using-ggplot)
+
+```{r}
+ggplot(data = gather(dfT), mapping = aes(x = value)) + 
+  geom_histogram(bins = 20) + facet_wrap(~key, scales = 'free') +
+  theme_tufte()
+
+```
+
+```{r}
+ggplot(data = gather(dfE), mapping = aes(x = value)) + 
+  geom_histogram(bins = 20) + facet_wrap(~key, scales = 'free') +
+  theme_tufte()
+```
+
 
 # 2. DATA PREPARATION
 Describe how you have transformed the data by changing the original variables or creating new variables. If you did transform the data or create new variables, discuss why you did this. Here are some possible transformations.
