@@ -18,9 +18,10 @@ d. Are any of the variables missing and need to be imputed “fixed”?
 
 ## Loading the data:
 
-```{r "Libraries", message=FALSE}
+```{r "Libraries", message=FALSE, warning=FALSE}
 library(tidyverse)
 library(ggthemes)
+library(GGally)
 ```
 
 ```{r "loading data", message=FALSE}
@@ -32,7 +33,21 @@ dfE <- dfE %>% select(-INDEX)
 glimpse(dfE)
 ```
 
+
 ## Initial Vizualizaton:
+
+```{r}
+naByCol <- function(df){
+  x = list(0)
+  for (i in colnames(df)) {
+    y = list(i, sum(is.na(df[,i])))
+    append(x, y)
+  }
+  return(y)
+}
+naByCol(dfT)
+```
+
 
 Special thanks to [this Stack Overflow question](https://stackoverflow.com/questions/13035834/plot-every-column-in-a-data-frame-as-a-histogram-on-one-page-using-ggplot)
 
@@ -46,6 +61,44 @@ ggplot(data = gather(dfT), mapping = aes(x = value)) +
 ```{r}
 ggplot(data = gather(dfE), mapping = aes(x = value)) + 
   geom_histogram(bins = 20) + facet_wrap(~key, scales = 'free') +
+  theme_tufte()
+```
+
+From these plots we can see that many variables are aproximetly normally distrubuted. Notable exceptions are `TEAM_BATTING_3B`, `TEAM_BATTING_HR`, `TEAM_PITCHING_H`.
+
+To explore these further:
+(Also, [special thanks to this site](https://briatte.github.io/ggcorr/#controlling-the-coefficient-labels))
+
+```{r}
+corr <- round(cor(dfT, use = "complete.obs"), 1) # Complete obs b/c of all NAs
+ggcorr(corr, hjust = 1, size = 3, color = "grey50", 
+       layout.exp = 1, label = TRUE, label_size = 3, 
+       label_alpha = TRUE)
+```
+
+
+```{r}
+summary(dfT)
+```
+
+```{r}
+corr2 <- round(cor(dfT[,-1], dfT$TARGET_WINS, use = "complete.obs"), 3) # For target:
+corr2 <- as.data.frame(corr2) %>% rownames_to_column(var = "Row_name" )%>% as_tibble()
+corr2 <- corr2 %>% rename(Correlation = V1)
+```
+
+```{r}
+ggplot(data = corr2, 
+       aes(x = reorder(Row_name, abs(Correlation)), 
+           y = Correlation))+
+  geom_bar(stat = 'identity') +
+  geom_text(aes(label=Correlation), 
+            hjust = ifelse(corr2$Correlation >= 0, -0.3, 1.3), 
+            size = 3, color = 'grey50') +
+  coord_flip()+
+  ylim(-.6, .6)+
+  xlab("Satistic")+
+  ggtitle("Correlation Between Factors and Wins")+
   theme_tufte()
 ```
 
