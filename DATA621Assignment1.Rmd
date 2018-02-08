@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 1. Data Exploration:
 Describe the size and the variables in the moneyball training data set. Consider that too much detail will cause a manager to lose interest while too little detail will make the manager consider that you aren’t doing your job. Some suggestions are given below. Please do NOT treat this as a check list of things to do to complete the assignment. You should have your own thoughts on what to tell the boss. These are just ideas.
+
 a. Mean / Standard Deviation / Median
 b. Bar Chart or Box Plot of the data
 c. Is the data correlated to the target variable (or to other variables?)
@@ -38,14 +39,24 @@ glimpse(dfE)
 
 ```{r}
 naByCol <- function(df){
-  x = list(0)
+  x = data.frame(varName = character(),
+                 numNA = integer())
   for (i in colnames(df)) {
-    y = list(i, sum(is.na(df[,i])))
-    append(x, y)
+    y =  sum(is.na(df[,i]))
+    newrow = data.frame(varName = i, numNA = y)
+    x <- rbind(x, newrow)
   }
-  return(y)
+  p = ggplot(x, aes(x = varName, y = numNA)) +
+    geom_bar(stat = 'identity') +
+    xlab("Variabel")+ ylab('Number of NAs')+
+    ggtitle("Number of NAs in each Variable") +
+    theme_tufte() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+    
+  return(p)
 }
 naByCol(dfT)
+naByCol(dfE)
 ```
 
 
@@ -88,6 +99,7 @@ corr2 <- corr2 %>% rename(Correlation = V1)
 ```
 
 ```{r}
+corrPlotFunc <- function(corr2){
 ggplot(data = corr2, 
        aes(x = reorder(Row_name, abs(Correlation)), 
            y = Correlation))+
@@ -100,8 +112,26 @@ ggplot(data = corr2,
   xlab("Satistic")+
   ggtitle("Correlation Between Factors and Wins")+
   theme_tufte()
+}
+corrPlotFunc(corr2)
 ```
 
+We also should check if there is correlation between the rows that had tons of NA values:
+```{r}
+dfMissing <- dfT %>% mutate(isMissing = ifelse(is.na(.$TEAM_BATTING_HBP), 1, 0))
+corCoef <- cor(dfMissing$TARGET_WINS, dfMissing$isMissing)
+corCoef
+```
+
+We can see that the element with the highest missing values is not very correlated 
+
+
+
+```{r}
+tVal <- corCoef * sqrt((nrow(dfMissing - 2)) / (1 - corCoef^2))
+tVal
+```
+We see that the corelation is not significant and futher, even if it was significant, the effect is so small it might be worth deleting the column instead.
 
 # 2. DATA PREPARATION
 Describe how you have transformed the data by changing the original variables or creating new variables. If you did transform the data or create new variables, discuss why you did this. Here are some possible transformations.
