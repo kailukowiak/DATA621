@@ -77,6 +77,35 @@ ggplot(data = gather(dfE), mapping = aes(x = value)) +
 
 From these plots we can see that many variables are aproximetly normally distrubuted. Notable exceptions are `TEAM_BATTING_3B`, `TEAM_BATTING_HR`, `TEAM_PITCHING_H`.
 
+
+```{r warning=F}
+dfT %>% 
+  scale() %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  ggplot(aes(x = key, y = value)) +
+  geom_boxplot()+
+  theme_tufte() +
+  #theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+  coord_flip() +
+  ylab('Scaled Values')+
+  xlab('Variable')+
+  ggtitle('Scaled Values', subtitle = 'Values scaled to presen on a common axis')
+  
+```
+
+
+```{r}
+dfT %>% 
+  gather() %>% 
+  ggplot(aes(x = key, y = value)) +
+  geom_boxplot()+
+  theme_tufte() +
+  #theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+  coord_flip()
+  
+```
+
 To explore these further:
 (Also, [special thanks to this site](https://briatte.github.io/ggcorr/#controlling-the-coefficient-labels))
 
@@ -125,6 +154,14 @@ corCoef
 
 We can see that the element with the highest missing values is not very correlated 
 
+```{r}
+dfT %>% group_by(TEAM_BATTING_HBP) %>% 
+  summarise(Count = n()) %>% 
+  ggplot(aes(x = TEAM_BATTING_HBP, y = Count))+
+  geom_point()+
+  ylim(0, 10) +
+  theme_tufte()
+```
 
 
 ```{r}
