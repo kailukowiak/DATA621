@@ -155,6 +155,14 @@ corCoef
 We can see that the element with the highest missing values is not very correlated 
 
 ```{r}
+t <- corCoef * sqrt((nrow(dfT) - 2) / (1 - corCoef ^2))
+t
+pt(q = t, df = nrow(dfT) - 2)
+```
+
+So we can see that it is not significant.
+
+```{r}
 dfT %>% group_by(TEAM_BATTING_HBP) %>% 
   summarise(Count = n()) %>% 
   ggplot(aes(x = TEAM_BATTING_HBP, y = Count))+
@@ -170,6 +178,11 @@ tVal
 ```
 We see that the corelation is not significant and futher, even if it was significant, the effect is so small it might be worth deleting the column instead.
 
+
+
+```{r}
+
+```
 # 2. DATA PREPARATION
 Describe how you have transformed the data by changing the original variables or creating new variables. If you did transform the data or create new variables, discuss why you did this. Here are some possible transformations.
 a. Fix missing values (maybe with a Mean or Median value)
@@ -178,6 +191,23 @@ c. Transform data by putting it into buckets
 d. Mathematical transforms such as log or square root (or use Box-Cox)
 e. Combine variables (such as ratios or adding or multiplying) to create new variables
 
+
+```{r}
+dfT <- dfT %>% select(-TEAM_BATTING_HBP)
+dfE <- dfE %>% select(-TEAM_BATTING_HBP)
+```
+
+
+```{r, message=FALSE, results='hide'}
+library(mice)
+tempData <- mice(dfT, m =5,maxit=50,meth='pmm',seed=500)
+
+#imputed <- mice(dfT, m = 5, maxit = 50, meth = 'pmm', seed = 500)
+```
+```{r}
+summary(tempData)
+```
+
 # 3. BUILD MODELS 
 Using the training data set, build at least three different multiple linear regression models, using different variables (or the same variables with different transformations). Since we have not yet covered automated variable selection methods, you should select the variables manually (unless you previously learned Forward or Stepwise selection, etc.). Since you manually selected a variable for inclusion into the model or exclusion into the model, indicate why this was done.
 Discuss the coefficients in the models, do they make sense? For example, if a team hits a lot of Home Runs, it would be reasonably expected that such a team would win more games. However, if the coefficient is negative (suggesting that the team would lose more games), then that needs to be discussed. Are you keeping the model even though it is counter intuitive? Why? The boss needs to know.
@@ -185,3 +215,41 @@ Discuss the coefficients in the models, do they make sense? For example, if a te
 # 4. SELECT MODELS
 Decide on the criteria for selecting the best multiple linear regression model. Will you select a model with slightly worse performance if it makes more sense or is more parsimonious? Discuss why you selected your model.
 For the multiple linear regression model, will you use a metric such as Adjusted R2, RMSE, etc.? Be sure to explain how you can make inferences from the model, discuss multi-collinearity issues (if any), and discuss other relevant model output. Using the training data set, evaluate the multiple linear regression model based on (a) mean squared error, (b) R2, (c) F-statistic, and (d) residual plots. Make predictions using the evaluation data set
+
+```{r}
+fitAll <- lm(TARGET_WINS ~ ., dfT)
+summary(fitAll)
+```
+
+```{r}
+fitSig <- lm(TARGET_WINS ~ TEAM_BATTING_2B + TEAM_BATTING_3B + TEAM_BASERUN_SB + TEAM_BASERUN_CS + TEAM_FIELDING_E + TEAM_FIELDING_DP, dfT)
+summary(fitSig)
+```
+
+There is significant reduction in the $R^2$ if we we only control for the significant values. 
+
+```{r}
+anova(fitSig, fitAll)
+```
+
+There is also significant difference between the models. Since the All model performs better WRT the $R^2$ it should be pefered. 
+
+
+
+```{r}
+fit1 <- lm(TARGET_WINS ~ ., complete(tempData, 1))
+summary(fit1)
+fit2 <- lm(TARGET_WINS ~ ., complete(tempData, 2))
+summary(fit2)
+```
+
+```{r}
+library(glmnet)
+x <- dfT %>% na.omit()
+
+x <- as.matrix(x[,-1])
+y <- as.matrix(x[,1])
+lassReg <- glmnet(x,y, alpha = 1, family="gaussian")
+plot(lassReg, xvar = "lambda")
+```
+
