@@ -178,11 +178,6 @@ tVal
 ```
 We see that the corelation is not significant and futher, even if it was significant, the effect is so small it might be worth deleting the column instead.
 
-
-
-```{r}
-
-```
 # 2. DATA PREPARATION
 Describe how you have transformed the data by changing the original variables or creating new variables. If you did transform the data or create new variables, discuss why you did this. Here are some possible transformations.
 a. Fix missing values (maybe with a Mean or Median value)
@@ -204,9 +199,7 @@ tempData <- mice(dfT, m =5,maxit=50,meth='pmm',seed=500)
 
 #imputed <- mice(dfT, m = 5, maxit = 50, meth = 'pmm', seed = 500)
 ```
-```{r}
-summary(tempData)
-```
+
 
 # 3. BUILD MODELS 
 Using the training data set, build at least three different multiple linear regression models, using different variables (or the same variables with different transformations). Since we have not yet covered automated variable selection methods, you should select the variables manually (unless you previously learned Forward or Stepwise selection, etc.). Since you manually selected a variable for inclusion into the model or exclusion into the model, indicate why this was done.
@@ -220,6 +213,80 @@ For the multiple linear regression model, will you use a metric such as Adjusted
 fitAll <- lm(TARGET_WINS ~ ., dfT)
 summary(fitAll)
 ```
+
+
+
+
+```{r}
+regressionDiagnostic <- function(fit){
+  ## https://www.statmethods.net/stats/rdiagnostics.html
+  library(car) # Required
+  print(outlierTest(fit))
+  qqPlot(fit, main = 'QQ Plot')
+  #av.Plots(fit)
+  cutoff <- 4/((nrow(dfT)-length(fitAll$coefficients)-2)) 
+  plot(fitAll, which=4, cook.levels=cutoff)
+  # Influence Plot 
+  influencePlot(fitAll,	id.method="identify", main="Influence Plot", 
+                sub="Circle size is proportial to Cook's Distance" )
+  library(MASS)
+  sresid <- studres(fit) 
+  hist(sresid, freq=FALSE, 
+       main="Distribution of Studentized Residuals")
+  xfit<-seq(min(sresid),max(sresid),length=40) 
+  yfit<-dnorm(xfit) 
+  lines(xfit, yfit)
+  print(ncvTest(fitAll))
+  # plot studentized residuals vs. fitted values 
+  spreadLevelPlot(fit)
+  print(durbinWatsonTest(fit))
+}
+
+
+regressionDiagnostic(fitAll)
+
+```
+
+```{r}
+# Influential Observations
+# added variable plots 
+#av.Plots(fitAll)
+# Cook's D plot
+# identify D values > 4/(n-k-1) 
+cutoff <- 4/((nrow(dfT)-length(fitAll$coefficients)-2)) 
+plot(fitAll, which=4, cook.levels=cutoff)
+# Influence Plot 
+influencePlot(fitAll,	id.method="identify", main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+```
+
+
+```{r}
+# Normality of Residuals
+# qq plot for studentized resid
+qqPlot(fitAll, main="QQ Plot")
+# distribution of studentized residuals
+library(MASS)
+sresid <- studres(fitAll) 
+hist(sresid, freq=FALSE, 
+   main="Distribution of Studentized Residuals")
+xfit<-seq(min(sresid),max(sresid),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit)
+```
+
+```{r}
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(fitAll)
+# plot studentized residuals vs. fitted values 
+spreadLevelPlot(fitAll)
+```
+
+```{r}
+library(ggfortify)
+autoplot(fitAll) + geom_point(color = 'grey40') +  theme_tufte()
+```
+
 
 ```{r}
 fitSig <- lm(TARGET_WINS ~ TEAM_BATTING_2B + TEAM_BATTING_3B + TEAM_BASERUN_SB + TEAM_BASERUN_CS + TEAM_FIELDING_E + TEAM_FIELDING_DP, dfT)
