@@ -19,13 +19,15 @@ d. Are any of the variables missing and need to be imputed “fixed”?
 
 ## Loading the data:
 
-```{r "Libraries", message=FALSE, warning=FALSE}
+```{r "Libraries", message=FALSE, warning=FALSE, echo=FALSE}
 library(tidyverse)
 library(ggthemes)
 library(GGally)
 ```
 
-```{r "loading data", message=FALSE}
+The data looks like this. We can see that all observations are integers and that their scale varies wildly.
+
+```{r "loading data", message=FALSE, echo=FALSE}
 dfT <- read_csv('moneyball-training-data.csv')
 dfT <- dfT %>% select(-INDEX)
 glimpse(dfT)
@@ -37,7 +39,9 @@ glimpse(dfE)
 
 ## Initial Vizualizaton:
 
-```{r}
+The variable `TEAM_BATTING_HPB` is almost completly filled with `NA` values. This, along with the additional information that hits by ball do not occure as much as they used too means we should probably delete it. 
+
+```{r, echo=FALSE}
 naByCol <- function(df){
   x = data.frame(varName = character(),
                  numNA = integer())
@@ -62,14 +66,17 @@ naByCol(dfE)
 
 Special thanks to [this Stack Overflow question](https://stackoverflow.com/questions/13035834/plot-every-column-in-a-data-frame-as-a-histogram-on-one-page-using-ggplot)
 
-```{r}
+Next is a visualization of the histograms check this distrubution of the data. While there are some variables that are skewness might be an issue, we really must check for normallacy of the erros later on. 
+All in all, the data looks good. 
+
+```{r, echo=FALSE}
 ggplot(data = gather(dfT), mapping = aes(x = value)) + 
   geom_histogram(bins = 20) + facet_wrap(~key, scales = 'free') +
   theme_tufte()
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 ggplot(data = gather(dfE), mapping = aes(x = value)) + 
   geom_histogram(bins = 20) + facet_wrap(~key, scales = 'free') +
   theme_tufte()
@@ -77,8 +84,9 @@ ggplot(data = gather(dfE), mapping = aes(x = value)) +
 
 From these plots we can see that many variables are aproximetly normally distrubuted. Notable exceptions are `TEAM_BATTING_3B`, `TEAM_BATTING_HR`, `TEAM_PITCHING_H`.
 
-
-```{r warning=F}
+## Bar plots.
+While there are significant outliers, 
+```{r warning=F, echo=FALSE}
 dfT %>% 
   scale() %>% 
   as_tibble() %>% 
@@ -95,7 +103,7 @@ dfT %>%
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 dfT %>% 
   gather() %>% 
   ggplot(aes(x = key, y = value)) +
@@ -106,10 +114,14 @@ dfT %>%
   
 ```
 
-To explore these further:
-(Also, [special thanks to this site](https://briatte.github.io/ggcorr/#controlling-the-coefficient-labels))
+While some values are extream outliers, we shoulnd't be too worried because compared to the total number of observations they are small. 
 
-```{r}
+
+## Heat Maps
+[Special thanks to this site](https://briatte.github.io/ggcorr/#controlling-the-coefficient-labels)
+We can see that there are some variables completely correlated variables. These mean that They can be excluded from the regression. 
+
+```{r, echo=FALSE}
 corr <- round(cor(dfT, use = "complete.obs"), 1) # Complete obs b/c of all NAs
 ggcorr(corr, hjust = 1, size = 3, color = "grey50", 
        layout.exp = 1, label = TRUE, label_size = 3, 
@@ -117,17 +129,20 @@ ggcorr(corr, hjust = 1, size = 3, color = "grey50",
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 summary(dfT)
 ```
 
-```{r}
+```{r, echo=FALSE}
 corr2 <- round(cor(dfT[,-1], dfT$TARGET_WINS, use = "complete.obs"), 3) # For target:
 corr2 <- as.data.frame(corr2) %>% rownames_to_column(var = "Row_name" )%>% as_tibble()
 corr2 <- corr2 %>% rename(Correlation = V1)
 ```
 
-```{r}
+## Correlation
+Hwere we see that the variables most correlated `WINS` are `TEAM_BATTING_H` and `TEAM_PITCHING_H` since these are correlated (from above) we can count them as the same. 
+
+```{r, echo=FALSE}
 corrPlotFunc <- function(corr2){
 ggplot(data = corr2, 
        aes(x = reorder(Row_name, abs(Correlation)), 
@@ -145,38 +160,27 @@ ggplot(data = corr2,
 corrPlotFunc(corr2)
 ```
 
-We also should check if there is correlation between the rows that had tons of NA values:
-```{r}
+We also should check if there is correlation between the rows that had tons of NA values.
+```{r, echo=FALSE}
 dfMissing <- dfT %>% mutate(isMissing = ifelse(is.na(.$TEAM_BATTING_HBP), 1, 0))
 corCoef <- cor(dfMissing$TARGET_WINS, dfMissing$isMissing)
 corCoef
 ```
+The correlation with missing variables for `TEAM_BATTING_HPB` is virtually 0. Thus, we can ignore it and remove it from our model. 
 
-We can see that the element with the highest missing values is not very correlated 
 
-```{r}
+```{r, echo=FALSE}
 t <- corCoef * sqrt((nrow(dfT) - 2) / (1 - corCoef ^2))
 t
 pt(q = t, df = nrow(dfT) - 2)
 ```
 
-So we can see that it is not significant.
 
-```{r}
-dfT %>% group_by(TEAM_BATTING_HBP) %>% 
-  summarise(Count = n()) %>% 
-  ggplot(aes(x = TEAM_BATTING_HBP, y = Count))+
-  geom_point()+
-  ylim(0, 10) +
-  theme_tufte()
-```
-
-
-```{r}
+```{r, echo=FALSE}
 tVal <- corCoef * sqrt((nrow(dfMissing - 2)) / (1 - corCoef^2))
 tVal
 ```
-We see that the corelation is not significant and futher, even if it was significant, the effect is so small it might be worth deleting the column instead.
+We see that the corelation is not significant (p = `r tVal`) and futher, even if it was significant, the effect is so small it might be worth deleting the column instead.
 
 # 2. DATA PREPARATION
 Describe how you have transformed the data by changing the original variables or creating new variables. If you did transform the data or create new variables, discuss why you did this. Here are some possible transformations.
@@ -186,14 +190,15 @@ c. Transform data by putting it into buckets
 d. Mathematical transforms such as log or square root (or use Box-Cox)
 e. Combine variables (such as ratios or adding or multiplying) to create new variables
 
-
+Given our data analysis in the previous section I feel comfortable removing the variable `TEAM_BATTING_HBP`.
 ```{r}
 dfT <- dfT %>% select(-TEAM_BATTING_HBP)
 dfE <- dfE %>% select(-TEAM_BATTING_HBP)
 ```
 
+There were significant numbers of `NA` values in other variables. We will try to impute them. 
 
-```{r, message=FALSE, results='hide'}
+```{r, message=FALSE, results='hide', echo=FALSE}
 library(mice)
 tempData <- mice(dfT, m =5,maxit=50,meth='pmm',seed=500)
 
@@ -205,19 +210,14 @@ tempData <- mice(dfT, m =5,maxit=50,meth='pmm',seed=500)
 Using the training data set, build at least three different multiple linear regression models, using different variables (or the same variables with different transformations). Since we have not yet covered automated variable selection methods, you should select the variables manually (unless you previously learned Forward or Stepwise selection, etc.). Since you manually selected a variable for inclusion into the model or exclusion into the model, indicate why this was done.
 Discuss the coefficients in the models, do they make sense? For example, if a team hits a lot of Home Runs, it would be reasonably expected that such a team would win more games. However, if the coefficient is negative (suggesting that the team would lose more games), then that needs to be discussed. Are you keeping the model even though it is counter intuitive? Why? The boss needs to know.
 
-# 4. SELECT MODELS
-Decide on the criteria for selecting the best multiple linear regression model. Will you select a model with slightly worse performance if it makes more sense or is more parsimonious? Discuss why you selected your model.
-For the multiple linear regression model, will you use a metric such as Adjusted R2, RMSE, etc.? Be sure to explain how you can make inferences from the model, discuss multi-collinearity issues (if any), and discuss other relevant model output. Using the training data set, evaluate the multiple linear regression model based on (a) mean squared error, (b) R2, (c) F-statistic, and (d) residual plots. Make predictions using the evaluation data set
 
-```{r}
+First we will try to fit the model with all available data. This gives the output:
+```{r, echo=FALSE}
 fitAll <- lm(TARGET_WINS ~ ., dfT)
 summary(fitAll)
 ```
 
-
-
-
-```{r}
+```{r, echo=FALSE}
 regressionDiagnostic <- function(fit){
   ## https://www.statmethods.net/stats/rdiagnostics.html
   library(car) # Required
@@ -247,12 +247,9 @@ regressionDiagnostic(fitAll)
 
 ```
 
-```{r}
-# Influential Observations
-# added variable plots 
-#av.Plots(fitAll)
-# Cook's D plot
-# identify D values > 4/(n-k-1) 
+Running the diagnostic on this regression we can see that it looks pretty good. The QQ plot especially makes it look like the regression does not suffer from major issues. 
+
+```{r, echo=FALSE}
 cutoff <- 4/((nrow(dfT)-length(fitAll$coefficients)-2)) 
 plot(fitAll, which=4, cook.levels=cutoff)
 # Influence Plot 
@@ -260,57 +257,50 @@ influencePlot(fitAll,	id.method="identify", main="Influence Plot", sub="Circle s
 ```
 
 
-```{r}
-# Normality of Residuals
-# qq plot for studentized resid
-qqPlot(fitAll, main="QQ Plot")
-# distribution of studentized residuals
-library(MASS)
-sresid <- studres(fitAll) 
-hist(sresid, freq=FALSE, 
-   main="Distribution of Studentized Residuals")
-xfit<-seq(min(sresid),max(sresid),length=40) 
-yfit<-dnorm(xfit) 
-lines(xfit, yfit)
-```
 
-```{r}
-# Evaluate homoscedasticity
-# non-constant error variance test
-ncvTest(fitAll)
-# plot studentized residuals vs. fitted values 
-spreadLevelPlot(fitAll)
-```
 
-```{r}
+
+```{r, echo=FALSE}
 library(ggfortify)
 autoplot(fitAll) + geom_point(color = 'grey40') +  theme_tufte()
 ```
 
 
-```{r}
+These aditional graphs, especially the residuals, do not imply bias. I also don't know enought about baseball to feel justified removing the datapoints with high cooks distance. 
+
+
+```{r, echo=FALSE}
 fitSig <- lm(TARGET_WINS ~ TEAM_BATTING_2B + TEAM_BATTING_3B + TEAM_BASERUN_SB + TEAM_BASERUN_CS + TEAM_FIELDING_E + TEAM_FIELDING_DP, dfT)
 summary(fitSig)
 ```
 
 There is significant reduction in the $R^2$ if we we only control for the significant values. 
 
-```{r}
+```{r, echo=FALSE}
 anova(fitSig, fitAll)
 ```
+
+
+If we remove the completly co-linear variables we get an even better R-squared. 
+
+```{r, echo=FALSE}
+fitNonCorr <- lm(TARGET_WINS ~ . -TEAM_BATTING_SO -TEAM_BATTING_BB - TEAM_BATTING_HR -TEAM_BATTING_H , data = dfT)
+summary(fitNonCorr)
+```
+
 
 There is also significant difference between the models. Since the All model performs better WRT the $R^2$ it should be pefered. 
 
 
 
-```{r}
+```{r, echo=FALSE}
 fit1 <- lm(TARGET_WINS ~ ., complete(tempData, 1))
 summary(fit1)
 fit2 <- lm(TARGET_WINS ~ ., complete(tempData, 2))
 summary(fit2)
 ```
 
-```{r}
+```{r, echo=FALSE}
 library(glmnet)
 x <- dfT %>% na.omit()
 
@@ -320,8 +310,21 @@ lassReg <- glmnet(x,y, alpha = 1, family="gaussian")
 plot(lassReg, xvar = "lambda")
 ```
 
-```{r}
+```{r, echo=FALSE}
 interact <- lm(TARGET_WINS ~ . + I(TEAM_BASERUN_SB / TEAM_BASERUN_CS) + I((TEAM_BATTING_H - TEAM_BATTING_2B - TEAM_BATTING_3B - TEAM_BATTING_HR) + 2 * (TEAM_BATTING_2B) + 3 * TEAM_BATTING_3B + 4 * TEAM_BATTING_HR), dfT)
 summary(interact)
 ```
 
+
+
+# 4. SELECT MODELS
+Decide on the criteria for selecting the best multiple linear regression model. Will you select a model with slightly worse performance if it makes more sense or is more parsimonious? Discuss why you selected your model.
+For the multiple linear regression model, will you use a metric such as Adjusted R2, RMSE, etc.? Be sure to explain how you can make inferences from the model, discuss multi-collinearity issues (if any), and discuss other relevant model output. Using the training data set, evaluate the multiple linear regression model based on (a) mean squared error, (b) R2, (c) F-statistic, and (d) residual plots. Make predictions using the evaluation data set.
+
+Based off of the models, we can see that the model with the hightest $R^2$ was the one with the co-linear variables removed with an `r summary(fitNonCorr)$adj.r.squared`
+
+
+# Apendix
+
+```{r appendix, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+```
