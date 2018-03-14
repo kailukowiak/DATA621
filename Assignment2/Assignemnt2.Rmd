@@ -10,16 +10,19 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE) # Necessary to compile to pd
 # Source: https://chrisbeeley.net/?p=1037
 ```
 
-## Import Data
+# Import Data
 
 
-```{r}
+```{r warning=F}
 library(tidyverse)
 library(knitr)
 df <- read_csv('~/DATA621/Assignments/Assignment2/classification-output-data.csv')
 sample_n(df, size = 5) %>% kable()
 ```
 
+
+# Confusion Matrix
+R's table function can be used to create a confusion matrix. For an more indepth explenation of this please see [this](http://www.saedsayad.com/model_evaluation_c.htm) excelent website. 
 
 ```{r}
 x <- table(df$scored.class, df$class)
@@ -28,5 +31,25 @@ rownames(x) <- c("Predicted Positive", 'Predicted Negative')
 x %>% kable()
 ```
 
+The sum of the rows and columns can give insight into model performance. The rows represent the predicted values while the columns represent the actual values. 
+
+```{r}
+# Lable each row for easier computation:
+a <- x[1, 1]; b <- x[1, 2]; c <- x[2, 1]; d <- x[2, 2]
+
+Sensitivity <- a / (a + c)
+Specificity <- d / (b + d)
+PosPredVal <- a / (a + b)
+NegPredVal <- d / (c + d)
+Accuracy <- (a + d) / (a + b + c +d)
+```
+
+* The overall accuracy of the model (`r Accuracy`) shows the total correct classification over all scores. This can be misleading because if 90% of the data is `positive`, a clasifier which only predicts `positive` will be 90% accurate.
+
+* Sensitivity (`r Sensitivity`) of the model is the the ratio of predicted positives to total positives.
+
+* Specificity (`r Specificity`) of the model is the accuracy of negative classification (the opposite of sensitivity).
+
+* Positive and Negative predicted values (`r PosPredVal` and `r NegPredVal` respectively) are positive and negative values that were correctly specified. 
 
 
