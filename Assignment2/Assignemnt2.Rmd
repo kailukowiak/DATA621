@@ -53,3 +53,122 @@ Accuracy <- (a + d) / (a + b + c +d)
 * Positive and Negative predicted values (`r PosPredVal` and `r NegPredVal` respectively) are positive and negative values that were correctly specified. 
 
 
+# Accuracy 
+Write a function that takes the data set as a dataframe, with actual and predicted classifications identified, and returns the accuracy of the predictions.
+
+```{r}
+accFunc <- function(df, actual, predicted, metric){
+  confMat <- table(df[[actual]], df[[predicted]])
+  if (metric == 'accuracy'){
+    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
+  return(accuracy)
+  }
+
+}
+
+accFunc(df, 9, 10, 'accuracy')
+```
+
+# Classification Error Rate
+
+```{r}
+accFunc <- function(df, actual, predicted, metric){
+  confMat <- table(df[[actual]], df[[predicted]])
+  if (metric == 'accuracy'){
+    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
+  return(accuracy)
+  } else if (metric == 'classError'){
+    classError <- (confMat[1, 2] + confMat[2, 1]) / sum(confMat)
+    return(classError)
+  }
+}
+
+accFunc(df, 9, 10, 'classError')
+```
+
+To verify that these sum to one:
+
+```{r}
+accFunc(df, 9, 10, 'classError') + accFunc(df, 9, 10, 'accuracy')
+```
+
+This test is passed.
+
+# Sensitivity
+
+```{r}
+accFunc <- function(df, actual, predicted, metric){
+  confMat <- table(df[[actual]], df[[predicted]])
+  if (metric == 'accuracy'){
+    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
+  return(accuracy)
+  } else if (metric == 'classError'){
+    classError <- (confMat[1, 2] + confMat[2, 1]) / sum(confMat)
+    return(classError)
+  } else if (metric == 'sensitivity'){
+    sensitivity <- confMat[1, 1] / sum(confMat[, 1])
+    return(sensitivity)
+  } else if (metric == 'precision'){
+    precision <-  confMat[[1]] / sum(confMat[1, ])
+  }
+}
+accFunc(df, 9, 10, 'sensitivity')
+```
+
+# Precision
+
+```{r}
+accFunc <- function(df, actual, predicted, metric){
+  confMat <- table(df[[actual]], df[[predicted]])
+  if (metric == 'accuracy'){
+    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
+  return(accuracy)
+  } else if (metric == 'classError'){
+    classError <- (confMat[1, 2] + confMat[2, 1]) / sum(confMat)
+    return(classError)
+  } else if (metric == 'sensitivity'){
+    sensitivity <- confMat[1, 1] / sum(confMat[, 1])
+    return(sensitivity)
+  } else if (metric == 'precision'){
+    precision <-  confMat[1,1] / sum(confMat[1, ])
+    return(precision)
+  }
+}
+
+accFunc(df, 9, 10, 'precision')
+```
+
+# Specificity
+
+```{r}
+accFunc <- function(df, actual, predicted, metric){
+  confMat <- table(df[[actual]], df[[predicted]])
+  if (metric == 'accuracy'){
+    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
+  return(accuracy)
+  } else if (metric == 'classError'){
+    classError <- (confMat[1, 2] + confMat[2, 1]) / sum(confMat)
+    return(classError)
+  } else if (metric == 'sensitivity'){
+    sensitivity <- confMat[1, 1] / sum(confMat[, 1])
+    return(sensitivity)
+  } else if (metric == 'precision'){
+    precision <-  confMat[1,1] / sum(confMat[1, ])
+    return(precision)
+  } else if (metric == 'specificity'){
+    specificity <- confMat[2,2] / sum(confMat[[2]])
+    return(specificity)
+  }
+}
+
+accFunc(df, 9, 10, 'specificity')
+```
+
+# F1 Score
+
+Write a function to calculate the F1 score.
+
+```{r}
+
+```
+
