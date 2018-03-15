@@ -25,71 +25,65 @@ sample_n(df, size = 5) %>% kable()
 R's table function can be used to create a confusion matrix. For an more indepth explenation of this please see [this](http://www.saedsayad.com/model_evaluation_c.htm) excelent website. 
 
 ```{r}
-x <- table(df$scored.class, df$class)
-colnames(x) <- c('Actual Positive', 'Actual Negative')
-rownames(x) <- c("Predicted Positive", 'Predicted Negative')
+x <- table(df$class, df$scored.class)
+colnames(x) <- c('Actual Negative ', 'Actual Positive')
+rownames(x) <- c("Predicted Negative", 'Predicted Positive')
 x %>% kable()
 ```
 
 The sum of the rows and columns can give insight into model performance. The rows represent the predicted values while the columns represent the actual values. 
 
-```{r}
-# Lable each row for easier computation:
-a <- x[1, 1]; b <- x[1, 2]; c <- x[2, 1]; d <- x[2, 2]
-
-Sensitivity <- a / (a + c)
-Specificity <- d / (b + d)
-PosPredVal <- a / (a + b)
-NegPredVal <- d / (c + d)
-Accuracy <- (a + d) / (a + b + c +d)
-```
-
-* The overall accuracy of the model (`r Accuracy`) shows the total correct classification over all scores. This can be misleading because if 90% of the data is `positive`, a clasifier which only predicts `positive` will be 90% accurate.
-
-* Sensitivity (`r Sensitivity`) of the model is the the ratio of predicted positives to total positives.
-
-* Specificity (`r Specificity`) of the model is the accuracy of negative classification (the opposite of sensitivity).
-
-* Positive and Negative predicted values (`r PosPredVal` and `r NegPredVal` respectively) are positive and negative values that were correctly specified. 
 
 
 # Accuracy 
 Write a function that takes the data set as a dataframe, with actual and predicted classifications identified, and returns the accuracy of the predictions.
 
 ```{r}
-accFunc <- function(df, actual, predicted, metric){
-  confMat <- table(df[[actual]], df[[predicted]])
-  if (metric == 'accuracy'){
-    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
-  return(accuracy)
+confusionFunction <- function(df, actual, predicted, metric){
+  x <- table(df[[actual]], df[[predicted]])
+  TN <- x[2, 2]; FN <- x[1, 2]; FP <- x[2, 1]; TP <- x[2, 2]
+  # Values.
+  
+  if (metric == 'Accuracy'){
+    Accuracy <- (TP + TN) / (TN + FN + FP + TP)
+    return(Accuracy)
+    }
+  
+  else if (metric == 'ClassificationErrorRate'){
+    ClassificationErrorRate <- (FP + FN) / (TN + FN + FP + TP)
+    return(ClassificationErrorRate)
+  } 
+  
+  else if (metric == 'Precicion'){
+     Precicion <- TP / (TP + FP)
+     return( Precicion)
   }
-
+  
+  else if (metric == "Sensitivity"){
+    Sensitivity <- TP / (TP + FN)
+    return(Sensitivity)
+  } 
+  
+  else {
+    Specificity <- TN / (TN + FP)  
+    return(Specificity)
+  }
 }
 
-accFunc(df, 9, 10, 'accuracy')
+confusionFunction(df, 9, 10, "Accuracy")
 ```
 
 # Classification Error Rate
 
 ```{r}
-accFunc <- function(df, actual, predicted, metric){
-  confMat <- table(df[[actual]], df[[predicted]])
-  if (metric == 'accuracy'){
-    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
-  return(accuracy)
-  } else if (metric == 'classError'){
-    classError <- (confMat[1, 2] + confMat[2, 1]) / sum(confMat)
-    return(classError)
-  }
-}
-
-accFunc(df, 9, 10, 'classError')
+confusionFunction(df, 9, 10, 'ClassificationErrorRate')
 ```
 
 To verify that these sum to one:
 
 ```{r}
-accFunc(df, 9, 10, 'classError') + accFunc(df, 9, 10, 'accuracy')
+confusionFunction(df, 9, 10, 'ClassificationErrorRate') + 
+  confusionFunction(df, 9, 10, 'Accuracy')
 ```
 
 This test is passed.
@@ -97,78 +91,115 @@ This test is passed.
 # Sensitivity
 
 ```{r}
-accFunc <- function(df, actual, predicted, metric){
-  confMat <- table(df[[actual]], df[[predicted]])
-  if (metric == 'accuracy'){
-    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
-  return(accuracy)
-  } else if (metric == 'classError'){
-    classError <- (confMat[1, 2] + confMat[2, 1]) / sum(confMat)
-    return(classError)
-  } else if (metric == 'sensitivity'){
-    sensitivity <- confMat[1, 1] / sum(confMat[, 1])
-    return(sensitivity)
-  } else if (metric == 'precision'){
-    precision <-  confMat[[1]] / sum(confMat[1, ])
-  }
-}
-accFunc(df, 9, 10, 'sensitivity')
+confusionFunction(df, 9, 10, 'Sensitivity')
 ```
 
 # Precision
 
 ```{r}
-accFunc <- function(df, actual, predicted, metric){
-  confMat <- table(df[[actual]], df[[predicted]])
-  if (metric == 'accuracy'){
-    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
-  return(accuracy)
-  } else if (metric == 'classError'){
-    classError <- (confMat[1, 2] + confMat[2, 1]) / sum(confMat)
-    return(classError)
-  } else if (metric == 'sensitivity'){
-    sensitivity <- confMat[1, 1] / sum(confMat[, 1])
-    return(sensitivity)
-  } else if (metric == 'precision'){
-    precision <-  confMat[1,1] / sum(confMat[1, ])
-    return(precision)
-  }
-}
-
-accFunc(df, 9, 10, 'precision')
+confusionFunction(df, 9, 10, 'Precicion')
 ```
 
 # Specificity
 
 ```{r}
-accFunc <- function(df, actual, predicted, metric){
-  confMat <- table(df[[actual]], df[[predicted]])
-  if (metric == 'accuracy'){
-    accuracy <- (confMat[1, 1] + confMat[2, 2]) / sum(confMat)
-  return(accuracy)
-  } else if (metric == 'classError'){
-    classError <- (confMat[1, 2] + confMat[2, 1]) / sum(confMat)
-    return(classError)
-  } else if (metric == 'sensitivity'){
-    sensitivity <- confMat[1, 1] / sum(confMat[, 1])
-    return(sensitivity)
-  } else if (metric == 'precision'){
-    precision <-  confMat[1,1] / sum(confMat[1, ])
-    return(precision)
-  } else if (metric == 'specificity'){
-    specificity <- confMat[2,2] / sum(confMat[[2]])
-    return(specificity)
-  }
-}
-
-accFunc(df, 9, 10, 'specificity')
+confusionFunction(df, 9, 10, 'Specificity')
 ```
+
+
+```{r}
+Prec <- confusionFunction(df, 9, 10, 'Precicion')
+Prec
+ACC=   confusionFunction(df, 9, 10, 'Accuracy') 
+ACC
+```
+
 
 # F1 Score
 
 Write a function to calculate the F1 score.
 
 ```{r}
+f1 <- function(df, actual, predicted){
+  f1Tab <- table(df[[actual]], df[[predicted]])
+  sens <- confusionFunction(df, actual, predicted, 'Sensitivity') 
+  prec <- confusionFunction(df, actual, predicted, 'Precision')
+  f1Score <- 2 * sens * prec / (prec + sens)
+  return(f1Score)
+}
 
+f1(df, 9, 10)
 ```
 
+
+# Bounds of F1
+
+The `F1` score is bouned between zero and 1. 
+
+$$
+F1_{Score} = \frac{2 * Precicion * Sensitivity}{Precicion + Sensitivity}
+$$
+
+For values of a, b $0<a<1$ and $0<b<1$ $ab < a$ and $ab < b$. Therefore the numerator is strictly less than the demominator of the above fraction.
+
+
+# ROC Curve Function
+
+```{r}
+rocFunc <- function(values, predictions){
+  # Returns a df of FPR and TPR and a tufte style graph of the AUC.
+  # Special thanks too: http://blog.revolutionanalytics.com/2016/08/roc-curves-in-two-lines-of-code.html
+  values <- values[order(predictions, decreasing=TRUE)]
+  df <- data.frame(TPR=cumsum(values)/sum(values), 
+             FPR=cumsum(!values)/sum(!values))
+  p <- ggplot(df, aes(FPR, TPR)) +
+    geom_line() + 
+    ggtitle('AUC Curve') +
+    geom_abline(slope = 1) +
+    ggthemes::theme_tufte()
+  auc <- df %>% 
+    mutate(AUC = FPR * lead(FPR) * TPR) %>% 
+    select(AUC)
+  return(list(auc, p))
+}
+
+Temp <- rocFunc(df$class, df$scored.probability)
+x <- Temp[1]
+data.frame(AUC = matrix(unlist(x))) %>% head() %>% kable()
+x  %>% unlist() %>% matrix() %>% data.frame() %>% head() 
+Temp[2]
+```
+
+# Investigate the caret package
+
+```{r}
+library(caret)
+confusionMatrix(df$class, df$scored.class)
+```
+
+We can see that this is a much more concise way to get many of the values that our function got. Given that it is probably written in C++ it will also be faster. 
+
+# Investigate the pROC package
+
+```{r}
+library(pROC)
+roc(df$class, df$scored.probability, plot = TRUE)
+```
+
+This is also a much more concise way to perform the analysis, however, in my huble opinion, my graph looks better.
+
+There is also the `plotROC` package which performs well:
+
+```{r}
+#devtools::install_github("sachsmc/plotROC")
+library(plotROC)
+
+
+ggplot(df, aes(d = class, m = scored.probability)) + 
+  geom_roc() + 
+  ggtitle('AUC Graph')+
+  geom_abline()+
+  ggthemes::theme_tufte() 
+```
+
+This produces an even better graph. 
