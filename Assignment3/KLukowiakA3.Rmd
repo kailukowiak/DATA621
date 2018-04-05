@@ -45,7 +45,7 @@ df <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-trainin
 df %>% sample_n(6) %>% kable(caption = 'Sample of Values for the Training Set')
 ```
 
-The training or labled dataset is comprised of 12 categorical and continuous variables and one `target` variable that indicates if an area is higher crime.
+The training or labeled data-set is comprised of 12 categorical and continuous variables and one `target` variable that indicates if an area is higher crime.
 
 ```{r LoadData2, warning=F, message=F, echo=FALSE}
 testDF <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-evaluation-data_modified.csv')
@@ -126,6 +126,25 @@ df %>%
   as_tibble() %>% 
   gather() %>% 
   ggplot(aes(x = key, y = value)) +
+  # geom_violin()+
+  # geom_tufteboxplot(outlier.colour="black", outlier.shape = 22)+
+  geom_boxplot()+
+  theme_tufte() +
+  theme(axis.title=element_blank()) +
+  ylab('Scaled Values')+
+  xlab('Variable')+
+  ggtitle('Distrobution of Values', subtitle = 'Y values scaled to fit a common axis')
+```
+
+
+From these two graphs we can see that many of distributions are skewed in one direction or another. It is also interesting to see that the target variable is below zero. This means that the median and mean values are different. 
+
+```{r, echo=FALSE}
+df %>% 
+  scale() %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  ggplot(aes(x = key, y = value)) +
   theme_tufte() +
   # geom_violin()+
   geom_tufteboxplot(outlier.colour="black")+
@@ -134,8 +153,6 @@ df %>%
   xlab('Variable')+
   ggtitle('Distrobution of Values', subtitle = 'Y values scaled to fit a common axis')
 ```
-
-From these two graphs we can see that many of distrobutions are skewed in one direction or another. It is also interesting to see that the target variable is below zero. This means that the median and mean values are different. 
 
 ```{r fig.height=8, echo=FALSE}
 ggplot(data = gather(df), mapping = aes(x = value)) + 
@@ -158,7 +175,7 @@ maxCorr <- corr[ind][1]
 ```
 
 
-This correlation plot shows that while there are some higly corrlated variables, the most correlated variable is only `r maxCorr`, which doesn't raise alarm bells. 
+This correlation plot shows that while there are some highly correlated variables, the most correlated variable is only `r maxCorr`, which doesn't raise alarm bells WRT multicoliniarity. 
 
 ```{r, echo=FALSE}
 corrDF <- cor(x = df[, 1:12], y = df$target) %>% 
@@ -188,13 +205,14 @@ We will see which variables play more of a role during our logistic classificati
 
 # Data Preperation
 
-Transformation of variables is less needed for logistic regresion because normallacy is not a requriment.
-As such, we need to ask ourselves wethere or not transforming variables will lead to a better model. This will focus on the interaction between variables. Logistic regression is 'linear' and an exhaustive search of all possible combinations/pollynomials would be difficult even if we limited them to three degrees each. Instead, I suggest a test where we fit an extreamly non-linear model `KNN` on the data and compare the ROC to the ROC from a simple logistic regression. If there is little difference, it can be safe to assume that the underlying relationship is linear. 
+Transformation of variables is less needed for logistic regresion because normallacy is not a requriment. However we will transform some variables, which have a large skewness, to see if they aid in prediction. 
+
+The other reason to transform variables is to account for interactions between variables. Logistic regression is 'linear' and an exhaustive search of all possible combinations/polynomials would be difficult even if we limited them to three degrees each. Instead, I suggest a test where we fit an extremely non-linear model `KNN` on the data and compare the ROC to the ROC from a simple logistic regression. If there is little difference, it can be safe to assume that the underlying relationship is linear. 
 
 I used [this example](http://rstudio-pubs-static.s3.amazonaws.com/16444_caf85a306d564eb490eebdbaf0072df2.html) to create a KNN model. 
 
 
-```{r warning=FALSE}
+```{r warning=FALSE, message=FALSE}
 library(ISLR)
 library(caret)
 library(ROCR)
@@ -230,22 +248,26 @@ mod1 <- glm(target~., data = df, family = 'binomial')
 prob = predict(mod1,type = c("response"))
 g <- roc(target ~ prob, data = df)
 logAUC <- g$auc
-# plot(knnFit)
-# 
-# plot(knnFit, print.thres = 0.5, type="S")
-# 
-# #AUC(training, knnFit, 'Test')
 ```
 
 The AUC for the KNN Model is `r knnAUC` and for the logistic regression model it was `r logAUC`. This leads me to believe that there is little need to transformation. 
 
+## Transformed Skewed Variables
 
+```{r results='asis'}
+logDF <- df
+logDF$rad <- log(logDF$rad)
+logDF$tax <- log(logDF$tax)
+
+logDF %>% head() %>% kable()
+```
 
 # Build Models
 
 This project will focus on automated variable selection. New techniques will be compared to the basic logistic regression. 
 
-The baisic logistic regreission gives a summary of:
+## Baisic Logistic Regression
+The basic logistic regression gives a summary of:
 
 
 ```{r results='asis'}
@@ -259,8 +281,16 @@ xtable(mod1)
 
 Here we have the output of all provided variables without any transformation. 
 
-If we do a stepwise selection to find the variables that limit the scope but still 
-provide excelent performance we get:
+```{r results='asis'}
+logData <- glm(target~., family = binomial(), data = logDF)
+xtable(logData)
+```
+
+
+## Stepwise Selection on Baisic Model
+
+If we do a step wise selection to find the variables that limit the scope but still 
+provide excellent performance we get:
 
 ```{r results='asis'}
 step <- stepAIC(mod1, direction="both", trace = FALSE)
@@ -274,9 +304,9 @@ stepModel <- glm(formula = stepFormula, family = binomial, data = df)
 xtable(stepModel)
 ```
 
-[This](https://www.lexjansen.com/pnwsug/2008/DavidCassell-StoppingStepwise.pdf) presentation offers an interesting critique of stepwise selection and some of the issue that make it less ideal. 
+[This](https://www.lexjansen.com/pnwsug/2008/DavidCassell-StoppingStepwise.pdf) presentation offers an interesting critique of step wise selection and some of the issue that make it less ideal. 
 
-
+## BestGLM Model Selection
 This model selection using the steps algorithm selects significantly fewer variables.
 ```{r}
 df1 <- df
@@ -288,10 +318,12 @@ BestGLMModel <- bestglm(df1, family = binomial)
 BestGLMModel
 ```
 
-Looking at lasso logistic regression might give us a better model selection and coefficent values. Below is the results. 
+## LASSO Regression
+
+Looking at lasso logistic regression might give us a better model selection and coefficient values. Below is the results. 
 
 ```{r}
-X <-df %>% dplyr::select(-target)
+X <- df %>% dplyr::select(-target)
 X <- data.matrix(X)
 #X <- as.matrix(X, ncol=12)
 y <- as.factor(df$target)
@@ -307,26 +339,49 @@ pred <- prediction(aucDF$lasso.prob, y)
 cvfit = cv.glmnet(X, y, family = "binomial", type.measure = "class")
 plot(cvfit)
 coef(cvfit, s = "lambda.1se")
-
-
-#plot(perf,colorize=FALSE, col="black") # plot ROC curve
-#lines(c(0,1),c(0,1),col = "gray", lty = 4 )
 ```
 
-This models coefficents deviate significantly from a normal `glm` model that excludes the one variable dropped. This is because LASSO penializes large coefficents. For example, `glm` model excluding `rm` is:
+## Regular logostic without LASSO dropped Variable
 
-```{r}
+This models coefficients deviate significantly from a normal `glm` model that excludes the one variable dropped. This is because LASSO penalizes large coefficients. For example, `glm` model excluding `rm` is:
+
+```{r results='asis'}
 mod3 <- glm(target ~ . -rm, family = 'binomial', data = df)
 xtable(mod3)
 ```
 
+This is interesting because we can see how different the coefficents are even though it has the same variables.
 
+
+
+## Lasso with scaled variable
+
+```{r}
+logX <- logDF %>% dplyr::select(-target)
+logX <- data.matrix(logX)
+y <- as.factor(logDF$target)
+fit = glmnet(logX, y, family = "binomial")
+library(ROCR)
+aucDF <- logX
+lasso.model = cv.glmnet(logX, y, family = "binomial", type.measure = 'class')
+
+aucDF$lasso.prob <- predict(lasso.model, type="response", newx = logX, s = 'lambda.1se')
+pred <- prediction(aucDF$lasso.prob, y)
+
+
+cvfitLOG = cv.glmnet(logX, y, family = "binomial", type.measure = "class")
+plot(cvfitLOG)
+coef(cvfitLOG, s = "lambda.1se")
+```
 
 # Chose a Model
 
 Model selection in the previous section used a variety of different methods ranging from none to BIC to AIC. As such it is unfair to select a criteria that we have used already. 
 
 I've chosen to use AUC because it is easily understood and provides a nice visual way to differentiate model performance.
+
+## Baisic GLM Model
+
 ```{r}
 AUC <- function(df, mod, modelName){
   library(plotROC)
@@ -346,21 +401,35 @@ AUC <- function(df, mod, modelName){
 }
 ```
 
+We see this model has good performance, especially for a dataset that has roughly equal numbers of positive and negative examples. 
+
+## GLM Model Evaluation 
+
 ```{r}
 AUC(df, mod1, 'Baisic GLM Model')
 ```
+
+## Scaled GLM Model
+
+```{r}
+AUC(df, logData, 'Sclaed GLM')
+```
+
+
+## STEPWISE AIC MODEL
 
 ```{r}
 AUC(df, step, 'Step AIC Model')
 
 ```
 
+## BestGLM Model
 
 ```{r}
 AUC(df, BestGLMModel$BestModel, 'Model Best')
 ```
 
-
+## Lasso Model 
 ```{r}
 fittedGLMcv <- predict(cvfit, X, s = "lambda.1se", type = "class")
 
@@ -381,12 +450,35 @@ ggplot(roc.data, aes(x=fpr, ymin=0, ymax=tpr)) +
 auc
 ```
 
+## Scaled LASSO
+
+```{r}
+fittedGLMcv <- predict(cvfitLOG, X, s = "lambda.1se", type = "class")
+
+perf <- performance(pred,"tpr","fpr")
+auc <-  performance(pred,"auc") # shows calculated AUC for model
+auc <- auc@y.values
+
+roc.data <- data.frame(fpr=unlist(perf@x.values),
+                       tpr=unlist(perf@y.values))
+
+ggplot(roc.data, aes(x=fpr, ymin=0, ymax=tpr)) +
+    #geom_ribbon(alpha=0.2) +
+    geom_line(aes(y=tpr)) +
+    geom_abline(slope=1, intercept=0, linetype='dashed') +
+    ggtitle("ROC Curve") +
+    ylab('True Positive Rate') +
+    xlab('False Positive Rate') + theme_tufte()
+auc
+```
+
+
 ## Which model?
 
-All models performed well with no model below 0.95. The best model was the LASSO model. This has advantages over the stepwise selection as the pdf linked above goes over. This means we can confidently select this mode.
+All models performed well with no model below 0.95. The best model was the LASSO model. This has advantages over the step wise selection as the PDF linked above goes over. This means we can confidently select this mode.
 
 ## Prediction
-The predictions for the test set are given below. The first column corresponds to the probabilities and the second column correpsonds to the actual prediction (the rounded probabilities).
+The predictions for the test set are given below. The first column corresponds to the probabilities and the second column corresponds to the actual prediction (the rounded probabilities).
 
 ```{r}
 testMat <- data.matrix(testDF)
@@ -396,17 +488,6 @@ predDF <- data.frame(PredictedProbabilities, PredictedValues)
 colnames(predDF) <- c('Predicted_Probabilities', 'Predicted_Outcome')
 predDF %>% kable()
 ```
-
-
-```{r}
-
-```
-
-
-
-
-
-
 
 # Apendix
 
@@ -428,4 +509,3 @@ logData <- glm(target~., family = binomial(), data = logDF)
 AUC(df, nonLog, 'Non log values')
 AUC(logDF, logData, 'logged values')
 ```
-
