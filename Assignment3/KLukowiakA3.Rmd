@@ -31,6 +31,7 @@ library(corrplot)
 library(glmnet)
 library(bestglm)
 library(xtable)
+library(caTools)
 options(xtable.floating = FALSE)
 options(xtable.timestamp = "")
 ####################
@@ -39,9 +40,15 @@ options(xtable.timestamp = "")
 
 ## The Data Frames
 
+
 ```{r LoadData, warning=F, message=F, echo=FALSE}
 # Loading the data
-df <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-training-data_modified.csv')
+LabledDF <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-training-data_modified.csv')
+
+set.seed(101) 
+sample = sample.split(LabledDF$zn, SplitRatio = .75)
+df <- subset(LabledDF, sample == TRUE)
+testDF <- subset(LabledDF, sample == FALSE)
 df %>% sample_n(6) %>% kable(caption = 'Sample of Values for the Training Set')
 ```
 
@@ -259,6 +266,11 @@ logDF <- df
 logDF$rad <- log(logDF$rad)
 logDF$tax <- log(logDF$tax)
 
+# Test Set
+logTestDF <- testDF
+logTestDF$rad <- log(logTestDF$rad)
+logTestDF$tax <- log(logTestDF$tax)
+
 logDF %>% head() %>% kable()
 ```
 
@@ -383,7 +395,7 @@ I've chosen to use AUC because it is easily understood and provides a nice visua
 ## Baisic GLM Model
 
 ```{r}
-AUC <- function(df, mod, modelName){
+AUC <- function(testDF, mod, modelName){
   library(plotROC)
   library(pROC)
   prob = predict(mod,type = c("response"))
@@ -406,31 +418,32 @@ We see this model has good performance, especially for a dataset that has roughl
 ## GLM Model Evaluation 
 
 ```{r}
-AUC(df, mod1, 'Baisic GLM Model')
+AUC(testDF, mod1, 'Baisic GLM Model')
 ```
 
 ## Scaled GLM Model
 
 ```{r}
-AUC(df, logData, 'Sclaed GLM')
+AUC(logTestDF, logData, 'Sclaed GLM')
 ```
 
 
 ## STEPWISE AIC MODEL
 
 ```{r}
-AUC(df, step, 'Step AIC Model')
+AUC(testDF, step, 'Step AIC Model')
 
 ```
 
 ## BestGLM Model
 
 ```{r}
-AUC(df, BestGLMModel$BestModel, 'Model Best')
+AUC(testDF, BestGLMModel$BestModel, 'Model Best')
 ```
 
 ## Lasso Model 
 ```{r}
+testX <- a
 fittedGLMcv <- predict(cvfit, X, s = "lambda.1se", type = "class")
 
 perf <- performance(pred,"tpr","fpr")
@@ -453,6 +466,12 @@ auc
 ## Scaled LASSO
 
 ```{r}
+
+logX <- testDF %>% dplyr::select(-target)
+logX <- data.matrix(X)
+#X <- as.matrix(X, ncol=1
+
+
 fittedGLMcv <- predict(cvfitLOG, X, s = "lambda.1se", type = "class")
 
 perf <- performance(pred,"tpr","fpr")
