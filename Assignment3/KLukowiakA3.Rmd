@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 3
     number_sections: true
-abstract: "This papers using logistic regression to analyze the Boston Crime Dataset to predict if an area has crime above or bellow the median. This work is completed for the CUNY course DATA 621"
+abstract: "This paper uses logistic regression to analyze the Boston Crime Dataset to predict if an area has crime above or bellow the median. I examin a variety of different model selections techniques, finding that a scalled LASSO regression works best. This work is completed for the CUNY course DATA 621."
 ---
 
 
@@ -31,6 +31,7 @@ library(corrplot)
 library(glmnet)
 library(bestglm)
 library(xtable)
+library(caTools)
 options(xtable.floating = FALSE)
 options(xtable.timestamp = "")
 ####################
@@ -39,17 +40,23 @@ options(xtable.timestamp = "")
 
 ## The Data Frames
 
+
 ```{r LoadData, warning=F, message=F, echo=FALSE}
 # Loading the data
-df <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-training-data_modified.csv')
+LabledDF <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-training-data_modified.csv')
+
+set.seed(101) 
+sample = sample.split(LabledDF$zn, SplitRatio = .75)
+df <- subset(LabledDF, sample == TRUE)
+testDF <- subset(LabledDF, sample == FALSE)
 df %>% sample_n(6) %>% kable(caption = 'Sample of Values for the Training Set')
 ```
 
 The training or labeled data-set is comprised of 12 categorical and continuous variables and one `target` variable that indicates if an area is higher crime.
 
 ```{r LoadData2, warning=F, message=F, echo=FALSE}
-testDF <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-evaluation-data_modified.csv')
-testDF %>% sample_n(6) %>% kable(caption = 'Sample of Values for the Test Set')
+evalDF <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-evaluation-data_modified.csv')
+evalDF %>% sample_n(6) %>% kable(caption = 'Sample of Values for the Test Set')
 ###############################
 ```
 
@@ -69,7 +76,7 @@ The evaluation set is a similar data frame but excludes the target variable. As 
 * `medv`: median value of owner-occupied homes in $1000s (predictor variable)
 * `target`: whether the crime rate is above the median crime rate (1) or not (0) (response variable)
 
-## Descriptive Statistics
+## Summary Statistics
 
 
 ```{r, echo=FALSE}
@@ -83,6 +90,9 @@ kable(SumTab2, caption = 'Summary Statistics')
 ```
 
 
+These tables give an overview of the variables, suggesting there may be some issues with distributions but we will need to look further before making any decisions on transforming the variables.
+
+## Descriptive Statistics
 
 ```{r, echo=FALSE}
 dis <- describe(df)
@@ -139,26 +149,16 @@ df %>%
 
 From these two graphs we can see that many of distributions are skewed in one direction or another. It is also interesting to see that the target variable is below zero. This means that the median and mean values are different. 
 
-```{r, echo=FALSE}
-df %>% 
-  scale() %>% 
-  as_tibble() %>% 
-  gather() %>% 
-  ggplot(aes(x = key, y = value)) +
-  theme_tufte() +
-  # geom_violin()+
-  geom_tufteboxplot(outlier.colour="black")+
-  theme(axis.title=element_blank()) +
-  ylab('Scaled Values')+
-  xlab('Variable')+
-  ggtitle('Distrobution of Values', subtitle = 'Y values scaled to fit a common axis')
-```
+
 
 ```{r fig.height=8, echo=FALSE}
 ggplot(data = gather(df), mapping = aes(x = value)) + 
-  geom_histogram(bins = 10) + facet_wrap(~key, ncol = 2, scales = 'free') +
+  geom_histogram(bins = 10) + 
+  facet_wrap(~key, ncol = 2, scales = 'free') +
   theme_tufte() 
 ```
+
+Similar to the box plots, these histograms show several variables with a lot of skew. In our model selection we will evaluate taking the log of some other skewed, non-binary variables.
 
 ```{r, echo=FALSE, echo=FALSE}
 corr <- round(cor(df), 1) 
@@ -168,7 +168,7 @@ corrplot.mixed(corr, lower.col = 'grey', upper.col = gray.colors(100), tl.col='g
 
 ```{r}
 corr2 <- corr
-diag(corr2) <- 0
+diag(corr2) <- 0 # To remove 1's from variables being correlated with themselves. 
 ind <- which(corr2 == max(corr2), arr.ind = TRUE)
 
 maxCorr <- corr[ind][1]
@@ -205,14 +205,14 @@ We will see which variables play more of a role during our logistic classificati
 
 # Data Preperation
 
-Transformation of variables is less needed for logistic regresion because normallacy is not a requriment. However we will transform some variables, which have a large skewness, to see if they aid in prediction. 
+Transformation of variables is less needed for logistic regression because normalcy is not a requirement. However we will transform some variables, which have a large skew, to see if they aid in prediction. 
 
 The other reason to transform variables is to account for interactions between variables. Logistic regression is 'linear' and an exhaustive search of all possible combinations/polynomials would be difficult even if we limited them to three degrees each. Instead, I suggest a test where we fit an extremely non-linear model `KNN` on the data and compare the ROC to the ROC from a simple logistic regression. If there is little difference, it can be safe to assume that the underlying relationship is linear. 
 
 I used [this example](http://rstudio-pubs-static.s3.amazonaws.com/16444_caf85a306d564eb490eebdbaf0072df2.html) to create a KNN model. 
 
 
-```{r warning=FALSE, message=FALSE}
+```{r warning=FALSE, message=FALSE, results="hide"}
 library(ISLR)
 library(caret)
 library(ROCR)
@@ -237,9 +237,10 @@ preProcValues
 
 training$target <- as.factor(training$target)
 set.seed(400)
-ctrl <- trainControl(method="repeatedcv",repeats = 3,classProbs=TRUE,summaryFunction = twoClassSummary)
-#ctrl <- trainControl(method="repeatedcv",repeats = 3) #,classProbs=TRUE,summaryFunction = twoClassSummary)
-knnFit <- train(target ~ ., data = training, method = "knn", trControl = ctrl, preProcess = c("center","scale"), tuneLength = 20)
+ctrl <- trainControl(method="repeatedcv",repeats = 3,classProbs=TRUE,
+                     summaryFunction = twoClassSummary)
+knnFit <- train(target ~ ., data = training, method = "knn", 
+                trControl = ctrl, preProcess = c("center","scale"), tuneLength = 20)
 
 #Output of kNN fit
 knnAUC <- knnFit$results[1,2]
@@ -254,13 +255,38 @@ The AUC for the KNN Model is `r knnAUC` and for the logistic regression model it
 
 ## Transformed Skewed Variables
 
+The skewed variables `rad` and `tax` have been transformed by taking the log. 
 ```{r results='asis'}
 logDF <- df
 logDF$rad <- log(logDF$rad)
 logDF$tax <- log(logDF$tax)
-
+logDF$dis <- log(logDF$dis)
+# Test Set
+logTestDF <- testDF
+logTestDF$rad <- log(logTestDF$rad)
+logTestDF$tax <- log(logTestDF$tax)
+logTestDF$dis <- log(logTestDF$dis)
 logDF %>% head() %>% kable()
 ```
+
+```{r}
+dis <- describe(logDF)
+dis[, 1:5] %>% kable(caption = 'Descriptive Statistics with Some Transormations')
+dis[, 6:9] %>% kable(caption = 'Descriptive Statistics with Some Transormations')
+dis[, 10:13] %>% kable(caption = 'Descriptive Statistics with Some Transormations')
+```
+
+
+
+
+```{r}
+ggplot(data = gather(logDF), mapping = aes(x = value)) + 
+  geom_histogram(bins = 10) + 
+  facet_wrap(~key, ncol = 2, scales = 'free') +
+  theme_tufte() 
+```
+
+While I have fixed some of the skewness issues we will need to see if the predictions are better with these.
 
 # Build Models
 
@@ -273,7 +299,7 @@ The basic logistic regression gives a summary of:
 ```{r results='asis'}
 mod1 <- glm(target ~ ., data = df)
 #summary(mod1)
-library(xtable)
+options(xtable.comment = FALSE)
 xtable(mod1)
 ```
 
@@ -341,7 +367,7 @@ plot(cvfit)
 coef(cvfit, s = "lambda.1se")
 ```
 
-## Regular logostic without LASSO dropped Variable
+## Regular logostic without LASSO Dropped Variable
 
 This models coefficients deviate significantly from a normal `glm` model that excludes the one variable dropped. This is because LASSO penalizes large coefficients. For example, `glm` model excluding `rm` is:
 
@@ -350,7 +376,7 @@ mod3 <- glm(target ~ . -rm, family = 'binomial', data = df)
 xtable(mod3)
 ```
 
-This is interesting because we can see how different the coefficents are even though it has the same variables.
+This is interesting because we can see how different the coefficients are even though it has the same variables.
 
 
 
@@ -360,13 +386,20 @@ This is interesting because we can see how different the coefficents are even th
 logX <- logDF %>% dplyr::select(-target)
 logX <- data.matrix(logX)
 y <- as.factor(logDF$target)
+
+# Testing Data
+logXTest <- logTestDF %>% dplyr::select(-target)
+logXTest <- as.matrix(logXTest)
+yTest <- as.factor(logTestDF$target)
+
+# Fitting
 fit = glmnet(logX, y, family = "binomial")
 library(ROCR)
 aucDF <- logX
 lasso.model = cv.glmnet(logX, y, family = "binomial", type.measure = 'class')
 
 aucDF$lasso.prob <- predict(lasso.model, type="response", newx = logX, s = 'lambda.1se')
-pred <- prediction(aucDF$lasso.prob, y)
+predScaled <- prediction(aucDF$lasso.prob, y)
 
 
 cvfitLOG = cv.glmnet(logX, y, family = "binomial", type.measure = "class")
@@ -383,7 +416,7 @@ I've chosen to use AUC because it is easily understood and provides a nice visua
 ## Baisic GLM Model
 
 ```{r}
-AUC <- function(df, mod, modelName){
+AUC <- function(testDF, mod, modelName){
   library(plotROC)
   library(pROC)
   prob = predict(mod,type = c("response"))
@@ -401,36 +434,37 @@ AUC <- function(df, mod, modelName){
 }
 ```
 
-We see this model has good performance, especially for a dataset that has roughly equal numbers of positive and negative examples. 
+We see this model has good performance, especially for a data set that has roughly equal numbers of positive and negative examples. 
 
 ## GLM Model Evaluation 
 
 ```{r}
-AUC(df, mod1, 'Baisic GLM Model')
+AUC(testDF, mod1, 'Baisic GLM Model')
 ```
 
 ## Scaled GLM Model
 
 ```{r}
-AUC(df, logData, 'Sclaed GLM')
+AUC(logTestDF, logData, 'Sclaed GLM')
 ```
 
 
 ## STEPWISE AIC MODEL
 
 ```{r}
-AUC(df, step, 'Step AIC Model')
+AUC(testDF, step, 'Step AIC Model')
 
 ```
 
 ## BestGLM Model
 
 ```{r}
-AUC(df, BestGLMModel$BestModel, 'Model Best')
+AUC(testDF, BestGLMModel$BestModel, 'Model Best')
 ```
 
 ## Lasso Model 
 ```{r}
+#testX <- a
 fittedGLMcv <- predict(cvfit, X, s = "lambda.1se", type = "class")
 
 perf <- performance(pred,"tpr","fpr")
@@ -453,19 +487,19 @@ auc
 ## Scaled LASSO
 
 ```{r}
-fittedGLMcv <- predict(cvfitLOG, X, s = "lambda.1se", type = "class")
+fittedGLMcvLog <- predict(cvfitLOG, logXTest, s = "lambda.1se", type = "class")
 
-perf <- performance(pred,"tpr","fpr")
-auc <-  performance(pred,"auc") # shows calculated AUC for model
+perf <- performance(predScaled,"tpr","fpr")
+auc <-  performance(predScaled,"auc") # shows calculated AUC for model
 auc <- auc@y.values
 
 roc.data <- data.frame(fpr=unlist(perf@x.values),
                        tpr=unlist(perf@y.values))
 
-ggplot(roc.data, aes(x=fpr, ymin=0, ymax=tpr)) +
+ggplot(roc.data, aes(x=fpr, ymin = 0, ymax=tpr)) +
     #geom_ribbon(alpha=0.2) +
     geom_line(aes(y=tpr)) +
-    geom_abline(slope=1, intercept=0, linetype='dashed') +
+    geom_abline(slope=1, intercept = 0, linetype='dashed') +
     ggtitle("ROC Curve") +
     ylab('True Positive Rate') +
     xlab('False Positive Rate') + theme_tufte()
@@ -480,13 +514,15 @@ All models performed well with no model below 0.95. The best model was the LASSO
 ## Prediction
 The predictions for the test set are given below. The first column corresponds to the probabilities and the second column corresponds to the actual prediction (the rounded probabilities).
 
+Surprisingly, the simplest scaled model worked best. While models like LASSO performed better than the non-scaled values, scaling some variables led to the best performance with a simple logistic regression.
+
 ```{r}
-testMat <- data.matrix(testDF)
-PredictedProbabilities <- predict(cvfit,type = "response", newx =  testMat) 
+testMat <- data.matrix(evalDF)
+PredictedProbabilities <- predict(logData,type = "response", newx =  testMat) 
 PredictedValues <- round(PredictedProbabilities)
 predDF <- data.frame(PredictedProbabilities, PredictedValues)
 colnames(predDF) <- c('Predicted_Probabilities', 'Predicted_Outcome')
-predDF %>% kable()
+predDF %>% head() %>% kable()
 ```
 
 # Apendix
@@ -494,18 +530,3 @@ predDF %>% kable()
 ```{r appendix, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
 ``` 
 
-```{r}
-# Test to see if logged values are better
-
-nonLog <- mod1
-
-logDF <- df
-#logDF$zn <- log(logDF$zn)
-#logDF$chas <- log(logDF$chas)
-logDF$rad <- log(logDF$rad)
-logDF$tax <- log(logDF$tax)
-logData <- glm(target~., family = binomial(), data = logDF)
-
-AUC(df, nonLog, 'Non log values')
-AUC(logDF, logData, 'logged values')
-```
