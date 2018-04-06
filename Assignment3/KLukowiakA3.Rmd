@@ -55,8 +55,8 @@ df %>% sample_n(6) %>% kable(caption = 'Sample of Values for the Training Set')
 The training or labeled data-set is comprised of 12 categorical and continuous variables and one `target` variable that indicates if an area is higher crime.
 
 ```{r LoadData2, warning=F, message=F, echo=FALSE}
-testDF <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-evaluation-data_modified.csv')
-testDF %>% sample_n(6) %>% kable(caption = 'Sample of Values for the Test Set')
+evalDF <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment3/crime-evaluation-data_modified.csv')
+evalDF %>% sample_n(6) %>% kable(caption = 'Sample of Values for the Test Set')
 ###############################
 ```
 
@@ -353,7 +353,7 @@ plot(cvfit)
 coef(cvfit, s = "lambda.1se")
 ```
 
-## Regular logostic without LASSO dropped Variable
+## Regular logostic without LASSO Dropped Variable
 
 This models coefficients deviate significantly from a normal `glm` model that excludes the one variable dropped. This is because LASSO penalizes large coefficients. For example, `glm` model excluding `rm` is:
 
@@ -372,13 +372,20 @@ This is interesting because we can see how different the coefficents are even th
 logX <- logDF %>% dplyr::select(-target)
 logX <- data.matrix(logX)
 y <- as.factor(logDF$target)
+
+# Testing Data
+logXTest <- logTestDF %>% dplyr::select(-target)
+logXTest <- as.matrix(logXTest)
+yTest <- as.factor(logTestDF$target)
+
+# Fitting
 fit = glmnet(logX, y, family = "binomial")
 library(ROCR)
 aucDF <- logX
 lasso.model = cv.glmnet(logX, y, family = "binomial", type.measure = 'class')
 
 aucDF$lasso.prob <- predict(lasso.model, type="response", newx = logX, s = 'lambda.1se')
-pred <- prediction(aucDF$lasso.prob, y)
+predScaled <- prediction(aucDF$lasso.prob, y)
 
 
 cvfitLOG = cv.glmnet(logX, y, family = "binomial", type.measure = "class")
@@ -443,7 +450,7 @@ AUC(testDF, BestGLMModel$BestModel, 'Model Best')
 
 ## Lasso Model 
 ```{r}
-testX <- a
+#testX <- a
 fittedGLMcv <- predict(cvfit, X, s = "lambda.1se", type = "class")
 
 perf <- performance(pred,"tpr","fpr")
@@ -466,25 +473,19 @@ auc
 ## Scaled LASSO
 
 ```{r}
+fittedGLMcvLog <- predict(cvfitLOG, logXTest, s = "lambda.1se", type = "class")
 
-logX <- testDF %>% dplyr::select(-target)
-logX <- data.matrix(X)
-#X <- as.matrix(X, ncol=1
-
-
-fittedGLMcv <- predict(cvfitLOG, X, s = "lambda.1se", type = "class")
-
-perf <- performance(pred,"tpr","fpr")
-auc <-  performance(pred,"auc") # shows calculated AUC for model
+perf <- performance(predScaled,"tpr","fpr")
+auc <-  performance(predScaled,"auc") # shows calculated AUC for model
 auc <- auc@y.values
 
 roc.data <- data.frame(fpr=unlist(perf@x.values),
                        tpr=unlist(perf@y.values))
 
-ggplot(roc.data, aes(x=fpr, ymin=0, ymax=tpr)) +
+ggplot(roc.data, aes(x=fpr, ymin = 0, ymax=tpr)) +
     #geom_ribbon(alpha=0.2) +
     geom_line(aes(y=tpr)) +
-    geom_abline(slope=1, intercept=0, linetype='dashed') +
+    geom_abline(slope=1, intercept = 0, linetype='dashed') +
     ggtitle("ROC Curve") +
     ylab('True Positive Rate') +
     xlab('False Positive Rate') + theme_tufte()
@@ -500,7 +501,7 @@ All models performed well with no model below 0.95. The best model was the LASSO
 The predictions for the test set are given below. The first column corresponds to the probabilities and the second column corresponds to the actual prediction (the rounded probabilities).
 
 ```{r}
-testMat <- data.matrix(testDF)
+testMat <- data.matrix(evalDF)
 PredictedProbabilities <- predict(cvfit,type = "response", newx =  testMat) 
 PredictedValues <- round(PredictedProbabilities)
 predDF <- data.frame(PredictedProbabilities, PredictedValues)
