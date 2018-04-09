@@ -509,7 +509,7 @@ auc
 
 ## Which model?
 
-All models performed well with no model below 0.95. The best model was the LASSO model. This has advantages over the step wise selection as the PDF linked above goes over. This means we can confidently select this mode.
+All models performed well with no model below 0.95. The best model was the simple scaled logistic regression model. Making the variables more normal increased the fit. One point of interest is that the LASSO model performed the best without a scale, so if there were an theoretical reasons that scaling a variable was not desireable, we could use that. 
 
 ## Prediction
 The predictions for the test set are given below. The first column corresponds to the probabilities and the second column corresponds to the actual prediction (the rounded probabilities).
