@@ -1,5 +1,5 @@
 ---
-title: "Assignment 3"
+title: "Assignment 4"
 author: "Kai Lukowiak"
 date: '2018-03-25'
 output: 
@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 3
     number_sections: true
-abstract: "This paper uses logistic regression to analyze the Boston Crime Dataset to predict if an area has crime above or bellow the median. I examin a variety of different model selections techniques, finding that a scalled LASSO regression works best. This work is completed for the CUNY course DATA 621."
+abstract: "This paper looks into the predictive ability of certain factors into the likelyhood of a person getting into an accident and also the amount that the accident will cost."
 ---
 
 
