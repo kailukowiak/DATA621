@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  25 APR 2018 17:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  25 APR 2018 21:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1074,165 +1074,126 @@ e
 \openout5 = `KLukowiakA4.toc'.
 
 
-Overfull \hbox (4.93813pt too wide) in alignment at lines 158--164
- [] [] [] [] [] [] [] [] 
+Overfull \hbox (1041.22635pt too wide) in alignment at lines 158--165
+ [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (4.93813pt too wide) in alignment at lines 164--169
- [] [] [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (4.93813pt too wide) in alignment at lines 169--177
- [] [] [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (15.13248pt too wide) in alignment at lines 179--185
- [] [] [] [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (15.13248pt too wide) in alignment at lines 185--190
- [] [] [] [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (62.27065pt too wide) in alignment at lines 190--203
- [] [] [] [] [] [] [] [] [] 
+Overfull \hbox (1123.42096pt too wide) in alignment at lines 165--185
+ [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] 
  []
 
 
 Package longtable Warning: Column widths have changed
-(longtable)                in table 2 on input line 203.
+(longtable)                in table 1 on input line 185.
 
-
-Overfull \hbox (57.6457pt too wide) in alignment at lines 205--211
- [] [] [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (57.6457pt too wide) in alignment at lines 211--216
- [] [] [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (92.70215pt too wide) in alignment at lines 216--228
- [] [] [] [] [] [] [] [] 
- []
-
-
-Package longtable Warning: Column widths have changed
-(longtable)                in table 3 on input line 228.
-
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 230.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 187.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 298
+LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 255
 .
 (/usr/local/texlive/2017/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Overfull \hbox (201.41199pt too wide) in alignment at lines 304--343
+Overfull \hbox (201.41199pt too wide) in alignment at lines 261--300
  [] [] [] 
  []
 
-[2]
-Overfull \hbox (201.41199pt too wide) in alignment at lines 343--356
+
+Overfull \hbox (201.41199pt too wide) in alignment at lines 300--313
  [] [] [] 
  []
 
 
 Package longtable Warning: Column widths have changed
-(longtable)                in table 5 on input line 356.
+(longtable)                in table 3 on input line 313.
 
-
-Overfull \hbox (10.23022pt too wide) in alignment at lines 372--387
+[2]
+Overfull \hbox (10.23022pt too wide) in alignment at lines 329--344
  [] [] [] [] [] [] [] 
  []
 
 
 Package longtable Warning: Column widths have changed
-(longtable)                in table 6 on input line 387.
+(longtable)                in table 4 on input line 344.
 
 
-Overfull \hbox (59.41087pt too wide) in alignment at lines 400--415
+Overfull \hbox (59.41087pt too wide) in alignment at lines 357--372
  [] [] [] [] [] [] [] [] 
  []
 
 
 Package longtable Warning: Column widths have changed
-(longtable)                in table 7 on input line 415.
+(longtable)                in table 5 on input line 372.
 
 [3]
 
 Package longtable Warning: Column widths have changed
-(longtable)                in table 8 on input line 467.
+(longtable)                in table 6 on input line 424.
+
+
+Package longtable Warning: Column widths have changed
+(longtable)                in table 7 on input line 462.
 
 [4]
 
 Package longtable Warning: Column widths have changed
-(longtable)                in table 9 on input line 505.
+(longtable)                in table 8 on input line 502.
 
-
-Package longtable Warning: Column widths have changed
-(longtable)                in table 10 on input line 545.
-
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 553.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 510.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 553.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 510.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 553
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 510
 .
 (/usr/local/texlive/2017/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 553
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 510
 .
 (/usr/local/texlive/2017/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 553.
+(Font)              <10> on input line 510.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 553.
+(Font)              <7> on input line 510.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 553.
-LaTeX Font Info:    Try loading font information for U+msa on input line 553.
+(Font)              <5> on input line 510.
+LaTeX Font Info:    Try loading font information for U+msa on input line 510.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 553.
+LaTeX Font Info:    Try loading font information for U+msb on input line 510.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) [5]
+)
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.770 -3.1516899\times
+l.727 -3.1516899\times
                        10\^{}\{-4\} and 0.0086636 for the claim amount. Since 
 Here is how much of TeX's memory you used:
- 14492 strings out of 492995
- 208583 string characters out of 6132704
- 340783 words of memory out of 5000000
- 17768 multiletter control sequences out of 15000+600000
+ 14487 strings out of 492995
+ 208553 string characters out of 6132704
+ 347818 words of memory out of 5000000
+ 17766 multiletter control sequences out of 15000+600000
  46847 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,9n,38p,236b,461s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,9n,38p,236b,459s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 !  ==> Fatal error occurred, no output PDF file produced!

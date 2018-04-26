@@ -78,10 +78,10 @@ sample = sample.split(LabledDF$TARGET_FLAG, SplitRatio = .75)
 df <- subset(LabledDF, sample == TRUE)
 testDF <- subset(LabledDF, sample == FALSE)
 temp <- df %>% sample_n(6)
-
-temp[1:8] %>% kable(caption = 'Sample of Values for the Training Set')
-temp[9:17] %>% kable(caption = 'Sample of Values for the Training Set')
-temp[18:25] %>% kable(caption = 'Sample of Values for the Training Set')
+temp %>% kable()
+# temp[,1:8] %>% kable(caption = 'Sample of Values for the Training Set')
+# temp[9:17] %>% kable(caption = 'Sample of Values for the Training Set')
+# temp[18:25] %>% kable(caption = 'Sample of Values for the Training Set')
 ```
 
 ```{r}
@@ -143,7 +143,8 @@ dis[, 10:13] %>% kable(caption = 'Descriptive Statistics')
 The count of NA values for each variable is given below.
 
 ```{r echo=FALSE}
-temp <- map(df, ~sum(is.na(.))) %>% t()
+temp <- map(df, ~sum(is.na(.))) 
+temp <- t(temp)
 temp[1:8] %>% kable(caption = 'Count of NA Values')
 temp[9:17] %>% kable(caption = 'Count of NA Values')
 temp[18:25] %>% kable(caption = 'Count of NA Values')
@@ -157,10 +158,16 @@ df$CONTAINS_NA <- ifelse(complete.cases(df), FALSE, TRUE)
 
 corFlag <- cor(df$TARGET_FLAG, df$CONTAINS_NA)
 corAmt <- cor(df$TARGET_AMT, df$CONTAINS_NA)
+df <- df %>% select(-CONTAINS_NA)
 ```
 
 The correlation between missing values and the 'Claim Filed' response is `r corFlag` and `r corAmt` for the claim amount. Since these are very close to zero we are not worried about them effecting the regressions. As such, we will drop them.
 
+```{r}
+df <- df[complete.cases(df),]
+evalDF <- evalDF[complete.cases(evalDF),]
+testDF <- testDF[complete.cases(testDF),]
+```
 
 
 ## Graphical EDA
@@ -249,7 +256,7 @@ Here I regressed all variables without transformation.
 mod1 <- lm(TARGET_AMT ~ ., data = dfCont)
 #summary(mod1)
 options(xtable.comment = FALSE)
-xtable(summary(mod1))
+summary(mod1)
 ```
 
 This is a pretty poor $R^2$. While there are some significant variables, the overall performance is poor.
@@ -259,7 +266,7 @@ Next we look at the regression with a log transformed `TARGET_AMT` variable.
 
 ```{r results='asis'}
 mod2 <- lm(log(TARGET_AMT+1) ~ ., data = dfCont) # Note the `+1`
-xtable(summary(mod2))
+summary(mod2)
 ```
 
 This is an improvement. It makes sense that we would need to transform the response variable given it's skewed nature.
@@ -271,36 +278,183 @@ This is an improvement. It makes sense that we would need to transform the respo
 summary(p1 <- powerTransform(I(TARGET_AMT+1) ~ ., dfCont))
 
 bcTrans <- lm(I((TARGET_AMT+1)^(-0.4)) ~ ., dfCont)
-summary(bcTrans) %>% xtable()
+summary(bcTrans) 
 ```
-
-
-### Stepwise Selection on Baisic Model
-
-Insert Stepwise or Other
-
-
-
 
 
 ## Regular logostic
 
 
-```{r}
-logMod1 <- glm()
+```{r results='asis'}
+logMod1 <- glm(TARGET_FLAG~., data = dfLog)
+logMod1 %>% summary()
 ```
 
 
-This models coefficients deviate significantly from a normal `glm` model that excludes the one variable dropped. This is because LASSO penalizes large coefficients. For example, `glm` model excluding `rm` is:
+## LASSO Logistic
+
+```{r}
+X <- dfLog %>% dplyr::select(-TARGET_FLAG)
+X <- data.matrix(X)
+#X <- as.matrix(X, ncol=12)
+y <- as.factor(dfLog$TARGET_FLAG)
+fit = glmnet(X, y, family = "binomial")
+library(ROCR)
+aucDF <- X
+lasso.model = cv.glmnet(X, y, family = "binomial", type.measure = 'class')
+
+aucDF$lasso.prob <- predict(lasso.model, type="response", newx = X, s = 'lambda.1se')
+pred <- prediction(aucDF$lasso.prob, y)
+
+
+cvfit = cv.glmnet(X, y, family = "binomial", type.measure = "class")
+plot(cvfit)
+coef(cvfit, s = "lambda.1se")
+```
+
+### Theoretical Model
+This model is selected for variables that I think will play a larger role based on my prior belifes. 
+
+```{r results='asis'}
+# theoDF <- dfLog %>% select(TARGET_FLAG, KIDSDRIV, AGE, OLDCLAIM, REVOKED, RED_CAR,)
+# modTheo <- glm(TARGET_FLAG~., data = theoDF)
+# summary(modTheo) %>% xtable()
+```
 
 
 
-This is interesting because we can see how different the coefficients are even though it has the same variables.
+# Chose a Model
+Here we chose the best of each class of model.
+
+## OLS Models
+
+### Regular OLS
+
+```{r}
+regressionDiagnostic <- function(fit){
+  ## https://www.statmethods.net/stats/rdiagnostics.html
+  library(car) # Required
+  print(outlierTest(fit))
+  qqPlot(fit, main = 'QQ Plot')
+  #av.Plots(fit)
+  cutoff <- 4/((nrow(dfCont)-length(fit$coefficients)-2)) 
+  plot(fit, which=4, cook.levels=cutoff)
+  # Influence Plot 
+  influencePlot(fit,	id.method="identify", main="Influence Plot", 
+                sub="Circle size is proportial to Cook's Distance" )
+  library(MASS)
+  sresid <- studres(fit) 
+  hist(sresid, freq=FALSE, 
+       main="Distribution of Studentized Residuals")
+  xfit<-seq(min(sresid),max(sresid),length=40) 
+  yfit<-dnorm(xfit) 
+  lines(xfit, yfit)
+  print(ncvTest(fit))
+  # plot studentized residuals vs. fitted values 
+  spreadLevelPlot(fit)
+  print(durbinWatsonTest(fit))
+}
+regressionDiagnostic(mod1)
+```
+
+We can see from the QQ Plot that we have some serious troubles with this model. 
+
+Let's hope that we can find someting better.
+### Log Scaled Model
 
 
+```{r}
+regressionDiagnostic(mod2)
+```
 
-## Lasso with scaled variable
+This model looks better but it is still far from perfect. The QQ Plot is greatly improved but there are still issues with cooks distance etc.
 
+
+```{r}
+regressionDiagnostic(bcTrans)
+```
+
+
+Even this model with a Box-Cox transformation has not great results. Given these results on our transformed models, I think that it might be worthwile examaning non-linear models such as tree based models. This, however, goes beyond the scope of the course.
+
+## Logisic Models
+
+### Basic Logistic regression
+```{r}
+AUC <- function(df, mod, modelName){
+  library(plotROC)
+  library(pROC)
+  prob = predict(mod,type = c("response"))
+  dfLog$prob=prob
+  p = ggplot(dfLog, aes(d = TARGET_FLAG, m = prob)) + 
+    geom_roc(n.cuts = 0) + 
+    ggtitle(paste('AUC Graph for', modelName)) +
+    xlab("False Positive Fraction") +
+    ylab('True Positive Fraction') +
+    geom_abline(linetype = 'dashed') +
+    theme_tufte()
+  
+  g <- roc(TARGET_FLAG ~ prob, data = dfLog)
+  return(list(p, g$auc))
+}
+AUC(select(testDF, -TARGET_AMT), logMod1, 'Baisic GLM Model')
+```
+
+### 
+
+```{r}
+
+#AUC(select(testDF, -TARGET_AMT), modTheo, 'Theoretical Model')
+```
+
+The theoretical model performs much worse than the model with everyting in it. 
+
+### LASSO Logsitic 
+
+```{r}
+#testX <- a
+fittedGLMcv <- predict(cvfit, X, s = "lambda.1se", type = "class")
+
+perf <- performance(pred,"tpr","fpr")
+auc <-  performance(pred,"auc") # shows calculated AUC for model
+auc <- auc@y.values
+
+roc.data <- data.frame(fpr=unlist(perf@x.values),
+                       tpr=unlist(perf@y.values))
+
+ggplot(roc.data, aes(x=fpr, ymin=0, ymax=tpr)) +
+    #geom_ribbon(alpha=0.2) +
+    geom_line(aes(y=tpr)) +
+    geom_abline(slope=1, intercept=0, linetype='dashed') +
+    ggtitle("ROC Curve") +
+    ylab('True Positive Rate') +
+    xlab('False Positive Rate') + theme_tufte()
+auc
+```
+
+# Model Selection
+
+## OLS
+I will base my selection off of the $R^2$ value. As such, we select the log transfomred logistic regression.
+
+## GLM Selection.
+For the GLM Model we will use AUC as a selector. As such, I chose the baisc model.
+
+# Predictions
+
+## OLS
+
+```{r}
+#evalDF <- evalDF %>% select(-CONTAINS_NA)
+predict(mod2,newdata = evalDF) %>% head()
+```
+
+
+## GLM
+
+```{r}
+predict(logMod1, newdata = evalDF) %>% head()
+```
 
 # Apendix
 

@@ -155,75 +155,32 @@ the accident will cost.
 \hypertarget{the-data-frames}{%
 \subsection{The Data Frames}\label{the-data-frames}}
 
-\begin{longtable}[]{@{}rrrrrrrl@{}}
-\caption{Sample of Values for the Training Set}\tabularnewline
+\begin{longtable}[]{@{}rrrrrrrlrllllrlrrllrrlrrl@{}}
 \toprule
 TARGET\_FLAG & TARGET\_AMT & KIDSDRIV & AGE & HOMEKIDS & YOJ & INCOME &
-PARENT1\tabularnewline
-\midrule
-\endfirsthead
-\toprule
-TARGET\_FLAG & TARGET\_AMT & KIDSDRIV & AGE & HOMEKIDS & YOJ & INCOME &
-PARENT1\tabularnewline
+PARENT1 & HOME\_VAL & MSTATUS & SEX & EDUCATION & JOB & TRAVTIME &
+CAR\_USE & BLUEBOOK & TIF & CAR\_TYPE & RED\_CAR & OLDCLAIM & CLM\_FREQ
+& REVOKED & MVR\_PTS & CAR\_AGE & URBANICITY\tabularnewline
 \midrule
 \endhead
-0 & 0.000 & 0 & 30 & 2 & 13 & 103881 & No\tabularnewline
-1 & 2044.217 & 0 & 33 & 0 & 9 & 69641 & No\tabularnewline
-0 & 0.000 & 0 & 46 & 0 & 12 & 88359 & No\tabularnewline
-0 & 0.000 & 0 & 27 & 3 & 7 & 131567 & Yes\tabularnewline
-0 & 0.000 & 0 & 51 & 0 & 13 & 85345 & No\tabularnewline
-0 & 0.000 & 0 & 35 & 1 & 10 & 16039 & No\tabularnewline
-\bottomrule
-\end{longtable}
-
-\begin{longtable}[]{@{}rllllrlrr@{}}
-\caption{Sample of Values for the Training Set}\tabularnewline
-\toprule
-HOME\_VAL & MSTATUS & SEX & EDUCATION & JOB & TRAVTIME & CAR\_USE &
-BLUEBOOK & TIF\tabularnewline
-\midrule
-\endfirsthead
-\toprule
-HOME\_VAL & MSTATUS & SEX & EDUCATION & JOB & TRAVTIME & CAR\_USE &
-BLUEBOOK & TIF\tabularnewline
-\midrule
-\endhead
-287047 & Yes & M & Bachelors & z\_Blue Collar & 33 & Commercial & 14890
-& 1\tabularnewline
-230290 & z\_No & M & Bachelors & z\_Blue Collar & 33 & Commercial &
-22680 & 1\tabularnewline
-267679 & Yes & z\_F & Masters & Lawyer & 25 & Private & 31980 &
-3\tabularnewline
-0 & z\_No & z\_F & Bachelors & Professional & 32 & Private & 8790 &
-1\tabularnewline
-NA & Yes & M & Masters & NA & 37 & Commercial & 34270 & 4\tabularnewline
-124191 & Yes & z\_F & z\_High School & Clerical & 5 & Private & 4010 &
-4\tabularnewline
-\bottomrule
-\end{longtable}
-
-\begin{longtable}[]{@{}llrrlrrl@{}}
-\caption{Sample of Values for the Training Set}\tabularnewline
-\toprule
-CAR\_TYPE & RED\_CAR & OLDCLAIM & CLM\_FREQ & REVOKED & MVR\_PTS &
-CAR\_AGE & URBANICITY\tabularnewline
-\midrule
-\endfirsthead
-\toprule
-CAR\_TYPE & RED\_CAR & OLDCLAIM & CLM\_FREQ & REVOKED & MVR\_PTS &
-CAR\_AGE & URBANICITY\tabularnewline
-\midrule
-\endhead
-Minivan & no & 0 & 0 & No & 1 & 9 & z\_Highly Rural/
-Rural\tabularnewline
-Panel Truck & yes & 1712 & 4 & No & 2 & 15 & Highly Urban/
-Urban\tabularnewline
-Minivan & no & 0 & 0 & Yes & 0 & 1 & Highly Urban/ Urban\tabularnewline
-Minivan & no & 0 & 0 & No & 3 & 1 & Highly Urban/ Urban\tabularnewline
-Panel Truck & no & 8481 & 3 & No & 5 & 15 & Highly Urban/
-Urban\tabularnewline
-z\_SUV & no & 38690 & 2 & No & 3 & 10 & Highly Urban/
-Urban\tabularnewline
+0 & 0.000 & 0 & 30 & 2 & 13 & 103881 & No & 287047 & Yes & M & Bachelors
+& z\_Blue Collar & 33 & Commercial & 14890 & 1 & Minivan & no & 0 & 0 &
+No & 1 & 9 & z\_Highly Rural/ Rural\tabularnewline
+1 & 2044.217 & 0 & 33 & 0 & 9 & 69641 & No & 230290 & z\_No & M &
+Bachelors & z\_Blue Collar & 33 & Commercial & 22680 & 1 & Panel Truck &
+yes & 1712 & 4 & No & 2 & 15 & Highly Urban/ Urban\tabularnewline
+0 & 0.000 & 0 & 46 & 0 & 12 & 88359 & No & 267679 & Yes & z\_F & Masters
+& Lawyer & 25 & Private & 31980 & 3 & Minivan & no & 0 & 0 & Yes & 0 & 1
+& Highly Urban/ Urban\tabularnewline
+0 & 0.000 & 0 & 27 & 3 & 7 & 131567 & Yes & 0 & z\_No & z\_F & Bachelors
+& Professional & 32 & Private & 8790 & 1 & Minivan & no & 0 & 0 & No & 3
+& 1 & Highly Urban/ Urban\tabularnewline
+0 & 0.000 & 0 & 51 & 0 & 13 & 85345 & No & NA & Yes & M & Masters & NA &
+37 & Commercial & 34270 & 4 & Panel Truck & no & 8481 & 3 & No & 5 & 15
+& Highly Urban/ Urban\tabularnewline
+0 & 0.000 & 0 & 35 & 1 & 10 & 16039 & No & 124191 & Yes & z\_F & z\_High
+School & Clerical & 5 & Private & 4010 & 4 & z\_SUV & no & 38690 & 2 &
+No & 3 & 10 & Highly Urban/ Urban\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -774,22 +731,14 @@ regressions. As such, we will drop them.
 \hypertarget{graphical-eda}{%
 \subsection{Graphical EDA}\label{graphical-eda}}
 
-\begin{verbatim}
-## Warning: Removed 1423 rows containing non-finite values (stat_ydensity).
-\end{verbatim}
-
-\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-8-1.pdf}
 
 The distrobutions are generally skeded upwards, nothing suggests
 problems with the dataset. The only variable that is very skewed is
 \texttt{TARGET\_AMT} and this makes sense because most are zero or low
 and some are very high.
 
-\begin{verbatim}
-## Warning: Removed 1423 rows containing non-finite values (stat_boxplot).
-\end{verbatim}
-
-\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-9-1.pdf}
 
 From these two graphs we can see that many of distributions are skewed
 in one direction or another. It is also interesting to see that the
@@ -801,7 +750,7 @@ values are different.
 ## they will be dropped
 \end{verbatim}
 
-\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-9-1.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-10-1.pdf}
 
 The factor variables some uneven counts as well but nothing that is
 highly out of the ordinary.
@@ -818,14 +767,21 @@ build to account for the wide range. During this transformation it is
 important to add 1 to each variable because there are many zero values
 that would throw and error.
 
+I also transformed \texttt{TARGET\_AMT} with the power of -0.4 based off
+of a Box-Cox analysis. Given the nature of other variables it does not
+seem necessary to transform others.
+
 \hypertarget{build-models}{%
 \section{Build Models}\label{build-models}}
 
-This project will focus on automated variable selection. New techniques
-will be compared to the basic logistic regression.
+Model selection will be based off of automated selection techniques as
+well as specific transformations.
+
+\hypertarget{ordinary-least-squares}{%
+\subsection{Ordinary Least Squares}\label{ordinary-least-squares}}
 
 \hypertarget{baisic-regression}{%
-\subsection{Baisic Regression}\label{baisic-regression}}
+\subsubsection{Baisic Regression}\label{baisic-regression}}
 
 Here I regressed all variables without transformation.
 
@@ -833,8 +789,8 @@ Call: lm(formula = TARGET\_AMT \textasciitilde{} ., data = dfCont)
 
 Residuals: Min 1Q Median 3Q Max -5602 -1702 -733 419 82515
 
-Coefficients: (1 not defined because of singularities) Estimate Std.
-Error t value Pr(\textgreater{}\textbar{}t\textbar{})\\
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater{}\textbar{}t\textbar{})\\
 (Intercept) 2.206e+03 6.267e+02 3.520 0.000436 \textbf{\emph{ KIDSDRIV
 2.624e+02 1.487e+02 1.765 0.077705 .\\
 AGE -5.843e+00 9.387e+00 -0.622 0.533648\\
@@ -872,236 +828,477 @@ REVOKEDYes 3.721e+02 2.356e+02 1.580 0.114251\\
 MVR\_PTS 1.654e+02 3.434e+01 4.817 1.51e-06 \textbf{\emph{ CAR\_AGE
 -2.414e+01 1.720e+01 -1.404 0.160504\\
 URBANICITYz\_Highly Rural/ Rural -1.918e+03 1.814e+02 -10.573
-\textless{} 2e-16 }} CONTAINS\_NATRUE NA NA NA NA\\
---- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 `'
-1
+\textless{} 2e-16 }} --- Signif. codes: 0 `\emph{\textbf{' 0.001 '}'
+0.01 '}' 0.05 `.' 0.1 `' 1
 
-Residual standard error: 4494 on 4468 degrees of freedom (1616
-observations deleted due to missingness) Multiple R-squared: 0.07951,
-Adjusted R-squared: 0.07209 F-statistic: 10.72 on 36 and 4468 DF,
-p-value: \textless{} 2.2e-16
-
-\begin{tabular}{rrrrr}
-  \hline
- & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
-  \hline
-(Intercept) & 2205.8267 & 626.6696 & 3.52 & 0.0004 \\ 
-  KIDSDRIV & 262.4222 & 148.7179 & 1.76 & 0.0777 \\ 
-  AGE & -5.8431 & 9.3867 & -0.62 & 0.5336 \\ 
-  HOMEKIDS & -34.5669 & 85.0574 & -0.41 & 0.6845 \\ 
-  YOJ & -8.6264 & 19.4418 & -0.44 & 0.6573 \\ 
-  INCOME & -0.0026 & 0.0027 & -0.95 & 0.3412 \\ 
-  PARENT1Yes & 671.0835 & 264.3190 & 2.54 & 0.0112 \\ 
-  HOME\_VAL & -0.0014 & 0.0009 & -1.61 & 0.1065 \\ 
-  MSTATUSz\_No & 487.0461 & 200.1212 & 2.43 & 0.0150 \\ 
-  SEXz\_F & -340.4322 & 240.8064 & -1.41 & 0.1575 \\ 
-  EDUCATIONBachelors & -325.4596 & 266.2361 & -1.22 & 0.2216 \\ 
-  EDUCATIONMasters & -355.6854 & 401.8411 & -0.89 & 0.3761 \\ 
-  EDUCATIONPhD & 590.5059 & 499.2529 & 1.18 & 0.2370 \\ 
-  EDUCATIONz\_High School & -153.3553 & 220.0196 & -0.70 & 0.4858 \\ 
-  JOBDoctor & -1365.2064 & 590.2066 & -2.31 & 0.0208 \\ 
-  JOBHome Maker & 14.9844 & 326.3066 & 0.05 & 0.9634 \\ 
-  JOBLawyer & 177.0661 & 400.1079 & 0.44 & 0.6581 \\ 
-  JOBManager & -937.1852 & 307.5161 & -3.05 & 0.0023 \\ 
-  JOBProfessional & 283.1297 & 282.4885 & 1.00 & 0.3163 \\ 
-  JOBStudent & -202.2700 & 314.4702 & -0.64 & 0.5201 \\ 
-  JOBz\_Blue Collar & 87.3287 & 246.4186 & 0.35 & 0.7231 \\ 
-  TRAVTIME & 16.6590 & 4.2774 & 3.89 & 0.0001 \\ 
-  CAR\_USEPrivate & -851.6084 & 216.9032 & -3.93 & 0.0001 \\ 
-  BLUEBOOK & 0.0112 & 0.0114 & 0.99 & 0.3238 \\ 
-  TIF & -45.4616 & 16.3917 & -2.77 & 0.0056 \\ 
-  CAR\_TYPEPanel Truck & 364.8127 & 392.8476 & 0.93 & 0.3531 \\ 
-  CAR\_TYPEPickup & 438.9739 & 222.2214 & 1.98 & 0.0483 \\ 
-  CAR\_TYPESports Car & 1304.4080 & 277.3126 & 4.70 & 0.0000 \\ 
-  CAR\_TYPEVan & 565.9206 & 291.2254 & 1.94 & 0.0520 \\ 
-  CAR\_TYPEz\_SUV & 765.1174 & 229.8907 & 3.33 & 0.0009 \\ 
-  RED\_CARyes & -137.4282 & 203.3711 & -0.68 & 0.4992 \\ 
-  OLDCLAIM & -0.0078 & 0.0099 & -0.79 & 0.4300 \\ 
-  CLM\_FREQ & 50.1905 & 73.8610 & 0.68 & 0.4968 \\ 
-  REVOKEDYes & 372.1246 & 235.5698 & 1.58 & 0.1143 \\ 
-  MVR\_PTS & 165.4038 & 34.3404 & 4.82 & 0.0000 \\ 
-  CAR\_AGE & -24.1394 & 17.1980 & -1.40 & 0.1605 \\ 
-  URBANICITYz\_Highly Rural/ Rural & -1917.6948 & 181.3748 & -10.57 & 0.0000 \\ 
-   \hline
-\end{tabular}
+Residual standard error: 4494 on 4468 degrees of freedom Multiple
+R-squared: 0.07951, Adjusted R-squared: 0.07209 F-statistic: 10.72 on 36
+and 4468 DF, p-value: \textless{} 2.2e-16
 
 This is a pretty poor \(R^2\). While there are some significant
 variables, the overall performance is poor.
 
-\begin{verbatim}
-## 
-## Call:
-## lm(formula = log(TARGET_AMT + 1) ~ ., data = dfCont)
-## 
-## Residuals:
-##    Min     1Q Median     3Q    Max 
-## -8.173 -2.340 -0.850  2.146 11.054 
-## 
-## Coefficients: (1 not defined because of singularities)
-##                                   Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                      3.640e+00  4.466e-01   8.150 4.66e-16 ***
-## KIDSDRIV                         3.949e-01  1.060e-01   3.727 0.000197 ***
-## AGE                             -6.131e-03  6.689e-03  -0.916 0.359457    
-## HOMEKIDS                        -2.705e-02  6.061e-02  -0.446 0.655468    
-## YOJ                             -1.264e-02  1.385e-02  -0.912 0.361683    
-## INCOME                          -3.189e-06  1.937e-06  -1.646 0.099790 .  
-## PARENT1Yes                       8.902e-01  1.884e-01   4.726 2.36e-06 ***
-## HOME_VAL                        -1.442e-06  6.060e-07  -2.379 0.017379 *  
-## MSTATUSz_No                      4.756e-01  1.426e-01   3.335 0.000860 ***
-## SEXz_F                          -1.547e-01  1.716e-01  -0.902 0.367280    
-## EDUCATIONBachelors              -5.226e-01  1.897e-01  -2.755 0.005901 ** 
-## EDUCATIONMasters                -4.859e-01  2.864e-01  -1.697 0.089781 .  
-## EDUCATIONPhD                     1.498e-01  3.558e-01   0.421 0.673785    
-## EDUCATIONz_High School           4.030e-02  1.568e-01   0.257 0.797156    
-## JOBDoctor                       -1.388e+00  4.206e-01  -3.299 0.000978 ***
-## JOBHome Maker                   -3.566e-01  2.325e-01  -1.534 0.125162    
-## JOBLawyer                       -2.596e-01  2.851e-01  -0.910 0.362667    
-## JOBManager                      -1.395e+00  2.191e-01  -6.368 2.11e-10 ***
-## JOBProfessional                 -4.193e-01  2.013e-01  -2.083 0.037331 *  
-## JOBStudent                      -4.121e-01  2.241e-01  -1.839 0.065963 .  
-## JOBz_Blue Collar                -3.573e-01  1.756e-01  -2.035 0.041932 *  
-## TRAVTIME                         2.163e-02  3.048e-03   7.095 1.50e-12 ***
-## CAR_USEPrivate                  -1.199e+00  1.546e-01  -7.754 1.10e-14 ***
-## BLUEBOOK                        -2.055e-05  8.115e-06  -2.532 0.011368 *  
-## TIF                             -6.686e-02  1.168e-02  -5.724 1.11e-08 ***
-## CAR_TYPEPanel Truck              5.446e-01  2.800e-01   1.945 0.051794 .  
-## CAR_TYPEPickup                   6.586e-01  1.584e-01   4.159 3.26e-05 ***
-## CAR_TYPESports Car               1.332e+00  1.976e-01   6.740 1.78e-11 ***
-## CAR_TYPEVan                      5.699e-01  2.075e-01   2.746 0.006057 ** 
-## CAR_TYPEz_SUV                    8.588e-01  1.638e-01   5.242 1.66e-07 ***
-## RED_CARyes                      -2.352e-01  1.449e-01  -1.623 0.104640    
-## OLDCLAIM                        -1.883e-05  7.020e-06  -2.682 0.007347 ** 
-## CLM_FREQ                         2.477e-01  5.263e-02   4.706 2.60e-06 ***
-## REVOKEDYes                       1.058e+00  1.679e-01   6.300 3.27e-10 ***
-## MVR_PTS                          1.949e-01  2.447e-02   7.965 2.07e-15 ***
-## CAR_AGE                         -8.615e-03  1.226e-02  -0.703 0.482150    
-## URBANICITYz_Highly Rural/ Rural -2.571e+00  1.293e-01 -19.894  < 2e-16 ***
-## CONTAINS_NATRUE                         NA         NA      NA       NA    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 3.203 on 4468 degrees of freedom
-##   (1616 observations deleted due to missingness)
-## Multiple R-squared:  0.2429, Adjusted R-squared:  0.2368 
-## F-statistic: 39.81 on 36 and 4468 DF,  p-value: < 2.2e-16
-\end{verbatim}
+\hypertarget{log-transformed}{%
+\subsubsection{Log Transformed}\label{log-transformed}}
 
-Here we have the output of all provided variables without any
-transformation.
+Next we look at the regression with a log transformed
+\texttt{TARGET\_AMT} variable.
+
+Call: lm(formula = log(TARGET\_AMT + 1) \textasciitilde{} ., data =
+dfCont)
+
+Residuals: Min 1Q Median 3Q Max -8.173 -2.340 -0.850 2.146 11.054
+
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater{}\textbar{}t\textbar{})\\
+(Intercept) 3.640e+00 4.466e-01 8.150 4.66e-16 \textbf{\emph{ KIDSDRIV
+3.949e-01 1.060e-01 3.727 0.000197 }} AGE -6.131e-03 6.689e-03 -0.916
+0.359457\\
+HOMEKIDS -2.705e-02 6.061e-02 -0.446 0.655468\\
+YOJ -1.264e-02 1.385e-02 -0.912 0.361683\\
+INCOME -3.189e-06 1.937e-06 -1.646 0.099790 .\\
+PARENT1Yes 8.902e-01 1.884e-01 4.726 2.36e-06 \textbf{\emph{ HOME\_VAL
+-1.442e-06 6.060e-07 -2.379 0.017379 }\\
+MSTATUSz\_No 4.756e-01 1.426e-01 3.335 0.000860 }\emph{ SEXz\_F
+-1.547e-01 1.716e-01 -0.902 0.367280\\
+EDUCATIONBachelors -5.226e-01 1.897e-01 -2.755 0.005901 \textbf{
+EDUCATIONMasters -4.859e-01 2.864e-01 -1.697 0.089781 .\\
+EDUCATIONPhD 1.498e-01 3.558e-01 0.421 0.673785\\
+EDUCATIONz\_High School 4.030e-02 1.568e-01 0.257 0.797156\\
+JOBDoctor -1.388e+00 4.206e-01 -3.299 0.000978 }} JOBHome Maker
+-3.566e-01 2.325e-01 -1.534 0.125162\\
+JOBLawyer -2.596e-01 2.851e-01 -0.910 0.362667\\
+JOBManager -1.395e+00 2.191e-01 -6.368 2.11e-10 \textbf{\emph{
+JOBProfessional -4.193e-01 2.013e-01 -2.083 0.037331 }\\
+JOBStudent -4.121e-01 2.241e-01 -1.839 0.065963 .\\
+JOBz\_Blue Collar -3.573e-01 1.756e-01 -2.035 0.041932 *\\
+TRAVTIME 2.163e-02 3.048e-03 7.095 1.50e-12 }\emph{ CAR\_USEPrivate
+-1.199e+00 1.546e-01 -7.754 1.10e-14 }\textbf{ BLUEBOOK -2.055e-05
+8.115e-06 -2.532 0.011368 *\\
+TIF -6.686e-02 1.168e-02 -5.724 1.11e-08 }\emph{ CAR\_TYPEPanel Truck
+5.446e-01 2.800e-01 1.945 0.051794 .\\
+CAR\_TYPEPickup 6.586e-01 1.584e-01 4.159 3.26e-05 }\textbf{
+CAR\_TYPESports Car 1.332e+00 1.976e-01 6.740 1.78e-11 }\emph{
+CAR\_TYPEVan 5.699e-01 2.075e-01 2.746 0.006057 \textbf{ CAR\_TYPEz\_SUV
+8.588e-01 1.638e-01 5.242 1.66e-07 }} RED\_CARyes -2.352e-01 1.449e-01
+-1.623 0.104640\\
+OLDCLAIM -1.883e-05 7.020e-06 -2.682 0.007347 ** CLM\_FREQ 2.477e-01
+5.263e-02 4.706 2.60e-06 \textbf{\emph{ REVOKEDYes 1.058e+00 1.679e-01
+6.300 3.27e-10 }} MVR\_PTS 1.949e-01 2.447e-02 7.965 2.07e-15
+\textbf{\emph{ CAR\_AGE -8.615e-03 1.226e-02 -0.703 0.482150\\
+URBANICITYz\_Highly Rural/ Rural -2.571e+00 1.293e-01 -19.894
+\textless{} 2e-16 }} --- Signif. codes: 0 `\emph{\textbf{' 0.001 '}'
+0.01 '}' 0.05 `.' 0.1 `' 1
+
+Residual standard error: 3.203 on 4468 degrees of freedom Multiple
+R-squared: 0.2429, Adjusted R-squared: 0.2368 F-statistic: 39.81 on 36
+and 4468 DF, p-value: \textless{} 2.2e-16
+
+This is an improvement. It makes sense that we would need to transform
+the response variable given it's skewed nature.
 
 \hypertarget{boxcox}{%
 \subsection{BoxCox}\label{boxcox}}
 
-\begin{verbatim}
-## bcPower Transformation to Normality 
-##    Est Power Rounded Pwr Wald Lwr bnd Wald Upr Bnd
-## Y1   -0.3997        -0.4      -0.4151      -0.3842
-## 
-## Likelihood ratio tests about transformation parameters
-##                             LRT df pval
-## LR test, lambda = (0)  3334.454  1    0
-## LR test, lambda = (1) 48980.134  1    0
-\end{verbatim}
+bcPower Transformation to Normality Est Power Rounded Pwr Wald Lwr bnd
+Wald Upr Bnd Y1 -0.3997 -0.4 -0.4151 -0.3842
 
-\begin{verbatim}
-## 
-## Call:
-## lm(formula = I((TARGET_AMT + 1)^(-0.4)) ~ ., data = dfCont)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.22372 -0.26618  0.09885  0.27222  0.94841 
-## 
-## Coefficients: (1 not defined because of singularities)
-##                                   Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                      5.718e-01  5.158e-02  11.087  < 2e-16 ***
-## KIDSDRIV                        -4.597e-02  1.224e-02  -3.756 0.000175 ***
-## AGE                              7.686e-04  7.725e-04   0.995 0.319821    
-## HOMEKIDS                         3.092e-03  7.000e-03   0.442 0.658701    
-## YOJ                              1.362e-03  1.600e-03   0.851 0.394739    
-## INCOME                           3.641e-07  2.238e-07   1.627 0.103780    
-## PARENT1Yes                      -1.008e-01  2.175e-02  -4.633 3.71e-06 ***
-## HOME_VAL                         1.613e-07  6.999e-08   2.304 0.021244 *  
-## MSTATUSz_No                     -5.537e-02  1.647e-02  -3.362 0.000781 ***
-## SEXz_F                           1.657e-02  1.982e-02   0.836 0.403263    
-## EDUCATIONBachelors               5.935e-02  2.191e-02   2.709 0.006782 ** 
-## EDUCATIONMasters                 5.585e-02  3.307e-02   1.689 0.091322 .  
-## EDUCATIONPhD                    -1.270e-02  4.109e-02  -0.309 0.757357    
-## EDUCATIONz_High School          -4.987e-03  1.811e-02  -0.275 0.783029    
-## JOBDoctor                        1.581e-01  4.858e-02   3.255 0.001140 ** 
-## JOBHome Maker                    4.226e-02  2.686e-02   1.573 0.115690    
-## JOBLawyer                        3.300e-02  3.293e-02   1.002 0.316351    
-## JOBManager                       1.629e-01  2.531e-02   6.438 1.34e-10 ***
-## JOBProfessional                  5.427e-02  2.325e-02   2.334 0.019625 *  
-## JOBStudent                       4.755e-02  2.588e-02   1.837 0.066220 .  
-## JOBz_Blue Collar                 4.227e-02  2.028e-02   2.084 0.037178 *  
-## TRAVTIME                        -2.493e-03  3.520e-04  -7.080 1.66e-12 ***
-## CAR_USEPrivate                   1.393e-01  1.785e-02   7.801 7.62e-15 ***
-## BLUEBOOK                         2.603e-06  9.372e-07   2.778 0.005501 ** 
-## TIF                              7.735e-03  1.349e-03   5.734 1.05e-08 ***
-## CAR_TYPEPanel Truck             -6.329e-02  3.233e-02  -1.957 0.050359 .  
-## CAR_TYPEPickup                  -7.585e-02  1.829e-02  -4.147 3.43e-05 ***
-## CAR_TYPESports Car              -1.518e-01  2.282e-02  -6.650 3.29e-11 ***
-## CAR_TYPEVan                     -6.372e-02  2.397e-02  -2.659 0.007873 ** 
-## CAR_TYPEz_SUV                   -9.798e-02  1.892e-02  -5.179 2.33e-07 ***
-## RED_CARyes                       2.835e-02  1.674e-02   1.694 0.090340 .  
-## OLDCLAIM                         2.323e-06  8.108e-07   2.865 0.004186 ** 
-## CLM_FREQ                        -3.064e-02  6.079e-03  -5.041 4.82e-07 ***
-## REVOKEDYes                      -1.255e-01  1.939e-02  -6.471 1.08e-10 ***
-## MVR_PTS                         -2.202e-02  2.826e-03  -7.791 8.19e-15 ***
-## CAR_AGE                          9.464e-04  1.415e-03   0.669 0.503748    
-## URBANICITYz_Highly Rural/ Rural  2.970e-01  1.493e-02  19.898  < 2e-16 ***
-## CONTAINS_NATRUE                         NA         NA      NA       NA    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.3699 on 4468 degrees of freedom
-##   (1616 observations deleted due to missingness)
-## Multiple R-squared:  0.2444, Adjusted R-squared:  0.2383 
-## F-statistic: 40.13 on 36 and 4468 DF,  p-value: < 2.2e-16
-\end{verbatim}
+Likelihood ratio tests about transformation parameters LRT df pval LR
+test, lambda = (0) 3334.454 1 0 LR test, lambda = (1) 48980.134 1 0
 
-\begin{verbatim}
-## bcPower Transformations to Multinormality 
-##       Est Power Rounded Pwr Wald Lwr bnd Wald Upr Bnd
-## len      0.1451        0.00      -0.2733       0.5636
-## adt      0.2396        0.33       0.0255       0.4536
-## trks    -0.7336        0.00      -1.9408       0.4735
-## sigs1   -0.2959       -0.50      -0.5511      -0.0408
-## 
-## Likelihood ratio tests about transformation parameters
-##                                  LRT df       pval
-## LR test, lambda = (0 0 0 0)  13.1339  4 0.01063972
-## LR test, lambda = (1 1 1 1) 140.5853  4 0.00000000
-\end{verbatim}
+Call: lm(formula = I((TARGET\_AMT + 1)\^{}(-0.4)) \textasciitilde{} .,
+data = dfCont)
 
-\hypertarget{stepwise-selection-on-baisic-model}{%
-\subsection{Stepwise Selection on Baisic
-Model}\label{stepwise-selection-on-baisic-model}}
+Residuals: Min 1Q Median 3Q Max -1.22372 -0.26618 0.09885 0.27222
+0.94841
 
-If we do a step wise selection to find the variables that limit the
-scope but still provide excellent performance we get:
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater{}\textbar{}t\textbar{})\\
+(Intercept) 5.718e-01 5.158e-02 11.087 \textless{} 2e-16 \textbf{\emph{
+KIDSDRIV -4.597e-02 1.224e-02 -3.756 0.000175 }} AGE 7.686e-04 7.725e-04
+0.995 0.319821\\
+HOMEKIDS 3.092e-03 7.000e-03 0.442 0.658701\\
+YOJ 1.362e-03 1.600e-03 0.851 0.394739\\
+INCOME 3.641e-07 2.238e-07 1.627 0.103780\\
+PARENT1Yes -1.008e-01 2.175e-02 -4.633 3.71e-06 \textbf{\emph{ HOME\_VAL
+1.613e-07 6.999e-08 2.304 0.021244 }\\
+MSTATUSz\_No -5.537e-02 1.647e-02 -3.362 0.000781 }\emph{ SEXz\_F
+1.657e-02 1.982e-02 0.836 0.403263\\
+EDUCATIONBachelors 5.935e-02 2.191e-02 2.709 0.006782 \textbf{
+EDUCATIONMasters 5.585e-02 3.307e-02 1.689 0.091322 .\\
+EDUCATIONPhD -1.270e-02 4.109e-02 -0.309 0.757357\\
+EDUCATIONz\_High School -4.987e-03 1.811e-02 -0.275 0.783029\\
+JOBDoctor 1.581e-01 4.858e-02 3.255 0.001140 } JOBHome Maker 4.226e-02
+2.686e-02 1.573 0.115690\\
+JOBLawyer 3.300e-02 3.293e-02 1.002 0.316351\\
+JOBManager 1.629e-01 2.531e-02 6.438 1.34e-10 }\textbf{ JOBProfessional
+5.427e-02 2.325e-02 2.334 0.019625 *\\
+JOBStudent 4.755e-02 2.588e-02 1.837 0.066220 .\\
+JOBz\_Blue Collar 4.227e-02 2.028e-02 2.084 0.037178 *\\
+TRAVTIME -2.493e-03 3.520e-04 -7.080 1.66e-12 }\emph{ CAR\_USEPrivate
+1.393e-01 1.785e-02 7.801 7.62e-15 }\textbf{ BLUEBOOK 2.603e-06
+9.372e-07 2.778 0.005501 } TIF 7.735e-03 1.349e-03 5.734 1.05e-08
+\textbf{\emph{ CAR\_TYPEPanel Truck -6.329e-02 3.233e-02 -1.957 0.050359
+.\\
+CAR\_TYPEPickup -7.585e-02 1.829e-02 -4.147 3.43e-05 }} CAR\_TYPESports
+Car -1.518e-01 2.282e-02 -6.650 3.29e-11 \emph{\textbf{ CAR\_TYPEVan
+-6.372e-02 2.397e-02 -2.659 0.007873 } CAR\_TYPEz\_SUV -9.798e-02
+1.892e-02 -5.179 2.33e-07 }\textbf{ RED\_CARyes 2.835e-02 1.674e-02
+1.694 0.090340 .\\
+OLDCLAIM 2.323e-06 8.108e-07 2.865 0.004186 } CLM\_FREQ -3.064e-02
+6.079e-03 -5.041 4.82e-07 \textbf{\emph{ REVOKEDYes -1.255e-01 1.939e-02
+-6.471 1.08e-10 }} MVR\_PTS -2.202e-02 2.826e-03 -7.791 8.19e-15
+\textbf{\emph{ CAR\_AGE 9.464e-04 1.415e-03 0.669 0.503748\\
+URBANICITYz\_Highly Rural/ Rural 2.970e-01 1.493e-02 19.898 \textless{}
+2e-16 }} --- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05
+`.' 0.1 `' 1
 
-\hypertarget{lasso-regression}{%
-\subsection{LASSO Regression}\label{lasso-regression}}
-
-Looking at lasso logistic regression might give us a better model
-selection and coefficient values. Below is the results.
+Residual standard error: 0.3699 on 4468 degrees of freedom Multiple
+R-squared: 0.2444, Adjusted R-squared: 0.2383 F-statistic: 40.13 on 36
+and 4468 DF, p-value: \textless{} 2.2e-16
 
 \hypertarget{regular-logostic}{%
 \subsection{Regular logostic}\label{regular-logostic}}
 
-This models coefficients deviate significantly from a normal
-\texttt{glm} model that excludes the one variable dropped. This is
-because LASSO penalizes large coefficients. For example, \texttt{glm}
-model excluding \texttt{rm} is:
+Call: glm(formula = TARGET\_FLAG \textasciitilde{} ., data = dfLog)
 
-This is interesting because we can see how different the coefficients
-are even though it has the same variables.
+Deviance Residuals: Min 1Q Median 3Q Max\\
+-0.9859 -0.2831 -0.1032 0.2783 1.2625
 
-\hypertarget{lasso-with-scaled-variable}{%
-\subsection{Lasso with scaled
-variable}\label{lasso-with-scaled-variable}}
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater{}\textbar{}t\textbar{})\\
+(Intercept) 4.462e-01 5.365e-02 8.316 \textless{} 2e-16 \textbf{\emph{
+KIDSDRIV 4.778e-02 1.273e-02 3.753 0.000177 }} AGE -8.077e-04 8.036e-04
+-1.005 0.314936\\
+HOMEKIDS -3.191e-03 7.282e-03 -0.438 0.661319\\
+YOJ -1.397e-03 1.665e-03 -0.839 0.401432\\
+INCOME -3.775e-07 2.328e-07 -1.622 0.104895\\
+PARENT1Yes 1.043e-01 2.263e-02 4.607 4.19e-06 \textbf{\emph{ HOME\_VAL
+-1.665e-07 7.281e-08 -2.286 0.022276 }\\
+MSTATUSz\_No 5.775e-02 1.713e-02 3.370 0.000757 }\emph{ SEXz\_F
+-1.718e-02 2.062e-02 -0.833 0.404608\\
+EDUCATIONBachelors -6.133e-02 2.279e-02 -2.690 0.007162 \textbf{
+EDUCATIONMasters -5.796e-02 3.440e-02 -1.685 0.092145 .\\
+EDUCATIONPhD 1.286e-02 4.274e-02 0.301 0.763509\\
+EDUCATIONz\_High School 5.205e-03 1.884e-02 0.276 0.782319\\
+JOBDoctor -1.644e-01 5.053e-02 -3.253 0.001149 } JOBHome Maker
+-4.396e-02 2.794e-02 -1.574 0.115658\\
+JOBLawyer -3.464e-02 3.426e-02 -1.011 0.311951\\
+JOBManager -1.696e-01 2.633e-02 -6.444 1.29e-10 }\textbf{
+JOBProfessional -5.725e-02 2.419e-02 -2.367 0.017962 *\\
+JOBStudent -4.933e-02 2.692e-02 -1.832 0.066990 .\\
+JOBz\_Blue Collar -4.370e-02 2.110e-02 -2.071 0.038385 *\\
+TRAVTIME 2.589e-03 3.662e-04 7.071 1.78e-12 }\emph{ CAR\_USEPrivate
+-1.449e-01 1.857e-02 -7.802 7.52e-15 }\textbf{ BLUEBOOK -2.743e-06
+9.749e-07 -2.814 0.004916 } TIF -8.044e-03 1.403e-03 -5.732 1.06e-08
+\textbf{\emph{ CAR\_TYPEPanel Truck 6.574e-02 3.363e-02 1.955 0.050694
+.\\
+CAR\_TYPEPickup 7.887e-02 1.903e-02 4.146 3.45e-05 }} CAR\_TYPESports
+Car 1.575e-01 2.374e-02 6.632 3.71e-11 \emph{\textbf{ CAR\_TYPEVan
+6.581e-02 2.493e-02 2.640 0.008331 } CAR\_TYPEz\_SUV 1.015e-01 1.968e-02
+5.159 2.59e-07 }\textbf{ RED\_CARyes -2.978e-02 1.741e-02 -1.710
+0.087280 .\\
+OLDCLAIM -2.447e-06 8.434e-07 -2.901 0.003740 } CLM\_FREQ 3.222e-02
+6.324e-03 5.096 3.62e-07 \textbf{\emph{ REVOKEDYes 1.308e-01 2.017e-02
+6.484 9.92e-11 }} MVR\_PTS 2.279e-02 2.940e-03 7.752 1.11e-14
+\textbf{\emph{ CAR\_AGE -9.862e-04 1.472e-03 -0.670 0.503048\\
+URBANICITYz\_Highly Rural/ Rural -3.087e-01 1.553e-02 -19.879
+\textless{} 2e-16 }} --- Signif. codes: 0 `\emph{\textbf{' 0.001 '}'
+0.01 '}' 0.05 `.' 0.1 `' 1
+
+(Dispersion parameter for gaussian family taken to be 0.1480396)
+
+\begin{verbatim}
+Null deviance: 875.19  on 4504  degrees of freedom
+\end{verbatim}
+
+Residual deviance: 661.44 on 4468 degrees of freedom AIC: 4217.7
+
+Number of Fisher Scoring iterations: 2
+
+\hypertarget{lasso-logistic}{%
+\subsection{LASSO Logistic}\label{lasso-logistic}}
+
+\begin{verbatim}
+## Loading required package: gplots
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'gplots'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     lowess
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in aucDF$lasso.prob <- predict(lasso.model, type = "response", newx
+## = X, : Coercing LHS to a list
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\begin{verbatim}
+## 24 x 1 sparse Matrix of class "dgCMatrix"
+##                         1
+## (Intercept)  9.311645e-01
+## KIDSDRIV     2.104515e-01
+## AGE         -3.066729e-03
+## HOMEKIDS     .           
+## YOJ          .           
+## INCOME      -5.091546e-06
+## PARENT1      5.400654e-01
+## HOME_VAL    -1.319478e-06
+## MSTATUS      2.495976e-01
+## SEX          .           
+## EDUCATION    1.950305e-02
+## JOB         -3.135790e-04
+## TRAVTIME     1.298654e-02
+## CAR_USE     -8.073200e-01
+## BLUEBOOK    -1.739624e-05
+## TIF         -3.631229e-02
+## CAR_TYPE     9.955364e-02
+## RED_CAR     -3.785589e-02
+## OLDCLAIM     .           
+## CLM_FREQ     1.374393e-01
+## REVOKED      4.762156e-01
+## MVR_PTS      1.130536e-01
+## CAR_AGE     -1.716225e-02
+## URBANICITY  -1.888708e+00
+\end{verbatim}
+
+\hypertarget{theoretical-model}{%
+\subsubsection{Theoretical Model}\label{theoretical-model}}
+
+This model is selected for variables that I think will play a larger
+role based on my prior belifes.
+
+\hypertarget{chose-a-model}{%
+\section{Chose a Model}\label{chose-a-model}}
+
+Here we chose the best of each class of model.
+
+\hypertarget{ols-models}{%
+\subsection{OLS Models}\label{ols-models}}
+
+\hypertarget{regular-ols}{%
+\subsubsection{Regular OLS}\label{regular-ols}}
+
+\begin{verbatim}
+##      rstudent unadjusted p-value Bonferonni p
+## 2988 19.17386         8.3009e-79   3.7395e-75
+## 3916 17.71827         6.0975e-68   2.7469e-64
+## 1393 16.20840         1.8631e-57   8.3935e-54
+## 309  13.01407         4.9631e-38   2.2359e-34
+## 2422 12.82457         5.3304e-37   2.4013e-33
+## 3223 12.77978         9.2987e-37   4.1891e-33
+## 2848 12.43057         6.6975e-35   3.0172e-31
+## 586  11.88084         4.5067e-32   2.0303e-28
+## 3419 11.54189         2.1799e-30   9.8206e-27
+## 246  10.19349         3.8883e-24   1.7517e-20
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in rlm.default(x, y, weights, method = method, wt.method =
+## wt.method, : 'rlm' failed to converge in 20 steps
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-17-1.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-17-2.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-17-3.pdf}
+
+\begin{verbatim}
+## Non-constant Variance Score Test 
+## Variance formula: ~ fitted.values 
+## Chisquare = 1937.732    Df = 1     p = 0
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in spreadLevelPlot.lm(fit): 631 negative fitted values removed
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-17-4.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-17-5.pdf}
+
+\begin{verbatim}
+##  lag Autocorrelation D-W Statistic p-value
+##    1    -0.003806213      2.007557   0.892
+##  Alternative hypothesis: rho != 0
+\end{verbatim}
+
+We can see from the QQ Plot that we have some serious troubles with this
+model.
+
+Let's hope that we can find someting better. \#\#\# Log Scaled Model
+
+\begin{verbatim}
+## 
+## No Studentized residuals with Bonferonni p < 0.05
+## Largest |rstudent|:
+##      rstudent unadjusted p-value Bonferonni p
+## 2834 3.464935         0.00053535           NA
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-18-1.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-18-2.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-18-3.pdf}
+
+\begin{verbatim}
+## Non-constant Variance Score Test 
+## Variance formula: ~ fitted.values 
+## Chisquare = 419.1293    Df = 1     p = 3.77547e-93
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in spreadLevelPlot.lm(fit): 534 negative fitted values removed
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-18-4.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-18-5.pdf}
+
+\begin{verbatim}
+##  lag Autocorrelation D-W Statistic p-value
+##    1     -0.02836693      2.056647   0.038
+##  Alternative hypothesis: rho != 0
+\end{verbatim}
+
+This model looks better but it is still far from perfect. The QQ Plot is
+greatly improved but there are still issues with cooks distance etc.
+
+\begin{verbatim}
+## 
+## No Studentized residuals with Bonferonni p < 0.05
+## Largest |rstudent|:
+##          rstudent unadjusted p-value Bonferonni p
+## 2834 -3.32102....         0.00090407           NA
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-19-1.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-19-2.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-19-3.pdf}
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-19-4.pdf}
+
+\begin{verbatim}
+## Non-constant Variance Score Test 
+## Variance formula: ~ fitted.values 
+## Chisquare = 394.5613    Df = 1     p = 8.411692e-88
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-19-5.pdf}
+
+\begin{verbatim}
+##  lag Autocorrelation D-W Statistic p-value
+##    1     -0.03132353      2.062565   0.018
+##  Alternative hypothesis: rho != 0
+\end{verbatim}
+
+Even this model with a Box-Cox transformation has not great results.
+Given these results on our transformed models, I think that it might be
+worthwile examaning non-linear models such as tree based models. This,
+however, goes beyond the scope of the course.
+
+\hypertarget{logisic-models}{%
+\subsection{Logisic Models}\label{logisic-models}}
+
+\hypertarget{basic-logistic-regression}{%
+\subsubsection{Basic Logistic
+regression}\label{basic-logistic-regression}}
+
+\begin{verbatim}
+## Warning: package 'pROC' was built under R version 3.4.4
+\end{verbatim}
+
+\begin{verbatim}
+## Type 'citation("pROC")' for a citation.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'pROC'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:plotROC':
+## 
+##     ggroc
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:glmnet':
+## 
+##     auc
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     cov, smooth, var
+\end{verbatim}
+
+\begin{verbatim}
+## [[1]]
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\begin{verbatim}
+## 
+## [[2]]
+## Area under the curve: 0.8207
+\end{verbatim}
+
+\hypertarget{section}{%
+\subsubsection{}\label{section}}
+
+The theoretical model performs much worse than the model with everyting
+in it.
+
+\hypertarget{lasso-logsitic}{%
+\subsubsection{LASSO Logsitic}\label{lasso-logsitic}}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+\begin{verbatim}
+## [[1]]
+## [1] 0.8087627
+\end{verbatim}
+
+\hypertarget{model-selection}{%
+\section{Model Selection}\label{model-selection}}
+
+\hypertarget{ols}{%
+\subsection{OLS}\label{ols}}
+
+I will base my selection off of the \(R^2\) value. As such, we select
+the log transfomred logistic regression.
+
+\hypertarget{glm-selection.}{%
+\subsection{GLM Selection.}\label{glm-selection.}}
+
+For the GLM Model we will use AUC as a selector. As such, I chose the
+baisc model.
+
+\hypertarget{predictions}{%
+\section{Predictions}\label{predictions}}
+
+\hypertarget{ols-1}{%
+\subsection{OLS}\label{ols-1}}
+
+\begin{verbatim}
+##          1          2          3          4          5          6 
+## 1.07923964 2.50448156 1.98003329 1.54566376 3.63463698 0.05468482
+\end{verbatim}
+
+\hypertarget{glm}{%
+\subsection{GLM}\label{glm}}
+
+\begin{verbatim}
+##          1          2          3          4          5          6 
+## 0.12471795 0.29952584 0.24145782 0.17842149 0.43940253 0.01132441
+\end{verbatim}
 
 \hypertarget{apendix}{%
 \section{Apendix}\label{apendix}}
@@ -1158,10 +1355,10 @@ variable}\label{lasso-with-scaled-variable}}
 \NormalTok{df <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(LabledDF, sample }\OperatorTok{==}\StringTok{ }\OtherTok{TRUE}\NormalTok{)}
 \NormalTok{testDF <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(LabledDF, sample }\OperatorTok{==}\StringTok{ }\OtherTok{FALSE}\NormalTok{)}
 \NormalTok{temp <-}\StringTok{ }\NormalTok{df }\OperatorTok{%>%}\StringTok{ }\KeywordTok{sample_n}\NormalTok{(}\DecValTok{6}\NormalTok{)}
-
-\NormalTok{temp[}\DecValTok{1}\OperatorTok{:}\DecValTok{8}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Sample of Values for the Training Set'}\NormalTok{)}
-\NormalTok{temp[}\DecValTok{9}\OperatorTok{:}\DecValTok{17}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Sample of Values for the Training Set'}\NormalTok{)}
-\NormalTok{temp[}\DecValTok{18}\OperatorTok{:}\DecValTok{25}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Sample of Values for the Training Set'}\NormalTok{)}
+\NormalTok{temp }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{()}
+\CommentTok{# temp[,1:8] %>% kable(caption = 'Sample of Values for the Training Set')}
+\CommentTok{# temp[9:17] %>% kable(caption = 'Sample of Values for the Training Set')}
+\CommentTok{# temp[18:25] %>% kable(caption = 'Sample of Values for the Training Set')}
 \KeywordTok{glimpse}\NormalTok{(df) }
 \NormalTok{evalDF <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{'/Users/kailukowiak/DATA621/Assignments/Assignment4/insurance-evaluation-data.csv'}\NormalTok{)}
 \NormalTok{evalDF <-}\StringTok{ }\KeywordTok{moneyCV}\NormalTok{(evalDF)}
@@ -1184,7 +1381,8 @@ variable}\label{lasso-with-scaled-variable}}
 \NormalTok{dis[, }\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Descriptive Statistics'}\NormalTok{)}
 \NormalTok{dis[, }\DecValTok{6}\OperatorTok{:}\DecValTok{9}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Descriptive Statistics'}\NormalTok{)}
 \NormalTok{dis[, }\DecValTok{10}\OperatorTok{:}\DecValTok{13}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Descriptive Statistics'}\NormalTok{)}
-\NormalTok{temp <-}\StringTok{ }\KeywordTok{map}\NormalTok{(df, }\OperatorTok{~}\KeywordTok{sum}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(.))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{t}\NormalTok{()}
+\NormalTok{temp <-}\StringTok{ }\KeywordTok{map}\NormalTok{(df, }\OperatorTok{~}\KeywordTok{sum}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(.))) }
+\NormalTok{temp <-}\StringTok{ }\KeywordTok{t}\NormalTok{(temp)}
 \NormalTok{temp[}\DecValTok{1}\OperatorTok{:}\DecValTok{8}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Count of NA Values'}\NormalTok{)}
 \NormalTok{temp[}\DecValTok{9}\OperatorTok{:}\DecValTok{17}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Count of NA Values'}\NormalTok{)}
 \NormalTok{temp[}\DecValTok{18}\OperatorTok{:}\DecValTok{25}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Count of NA Values'}\NormalTok{)}
@@ -1193,6 +1391,10 @@ variable}\label{lasso-with-scaled-variable}}
 
 \NormalTok{corFlag <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(df}\OperatorTok{$}\NormalTok{TARGET_FLAG, df}\OperatorTok{$}\NormalTok{CONTAINS_NA)}
 \NormalTok{corAmt <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(df}\OperatorTok{$}\NormalTok{TARGET_AMT, df}\OperatorTok{$}\NormalTok{CONTAINS_NA)}
+\NormalTok{df <-}\StringTok{ }\NormalTok{df }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{CONTAINS_NA)}
+\NormalTok{df <-}\StringTok{ }\NormalTok{df[}\KeywordTok{complete.cases}\NormalTok{(df),]}
+\NormalTok{evalDF <-}\StringTok{ }\NormalTok{evalDF[}\KeywordTok{complete.cases}\NormalTok{(evalDF),]}
+\NormalTok{testDF <-}\StringTok{ }\NormalTok{testDF[}\KeywordTok{complete.cases}\NormalTok{(testDF),]}
 \NormalTok{df }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{select_if}\NormalTok{(is.numeric) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{scale}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
@@ -1232,9 +1434,9 @@ variable}\label{lasso-with-scaled-variable}}
 \NormalTok{dfCont <-}\StringTok{ }\NormalTok{df }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{TARGET_FLAG)}
 \NormalTok{dfLog <-}\StringTok{ }\NormalTok{df }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{TARGET_AMT)}
 \NormalTok{mod1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(TARGET_AMT }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ dfCont)}
-\KeywordTok{summary}\NormalTok{(mod1)}
+\CommentTok{#summary(mod1)}
 \KeywordTok{options}\NormalTok{(}\DataTypeTok{xtable.comment =} \OtherTok{FALSE}\NormalTok{)}
-\KeywordTok{xtable}\NormalTok{(}\KeywordTok{summary}\NormalTok{(mod1))}
+\KeywordTok{summary}\NormalTok{(mod1)}
 \NormalTok{mod2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\KeywordTok{log}\NormalTok{(TARGET_AMT}\OperatorTok{+}\DecValTok{1}\NormalTok{) }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ dfCont) }\CommentTok{# Note the `+1`}
 \KeywordTok{summary}\NormalTok{(mod2)}
 
@@ -1242,9 +1444,94 @@ variable}\label{lasso-with-scaled-variable}}
 \KeywordTok{summary}\NormalTok{(p1 <-}\StringTok{ }\KeywordTok{powerTransform}\NormalTok{(}\KeywordTok{I}\NormalTok{(TARGET_AMT}\OperatorTok{+}\DecValTok{1}\NormalTok{) }\OperatorTok{~}\StringTok{ }\NormalTok{., dfCont))}
 
 \NormalTok{bcTrans <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\KeywordTok{I}\NormalTok{((TARGET_AMT}\OperatorTok{+}\DecValTok{1}\NormalTok{)}\OperatorTok{^}\NormalTok{(}\OperatorTok{-}\FloatTok{0.4}\NormalTok{)) }\OperatorTok{~}\StringTok{ }\NormalTok{., dfCont)}
-\KeywordTok{summary}\NormalTok{(bcTrans)}
-\CommentTok{#summary(powerTransform(cbind(len, adt, trks, sigs1) ~ 1, Highway1))}
-\KeywordTok{summary}\NormalTok{(a3 <-}\StringTok{ }\KeywordTok{powerTransform}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(len, adt, trks, sigs1) }\OperatorTok{~}\StringTok{ }\NormalTok{htype, Highway1))}
+\KeywordTok{summary}\NormalTok{(bcTrans) }
+\NormalTok{logMod1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(TARGET_FLAG}\OperatorTok{~}\NormalTok{., }\DataTypeTok{data =}\NormalTok{ dfLog)}
+\NormalTok{logMod1 }\OperatorTok{%>%}\StringTok{ }\KeywordTok{summary}\NormalTok{()}
+\NormalTok{X <-}\StringTok{ }\NormalTok{dfLog }\OperatorTok{%>%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{TARGET_FLAG)}
+\NormalTok{X <-}\StringTok{ }\KeywordTok{data.matrix}\NormalTok{(X)}
+\CommentTok{#X <- as.matrix(X, ncol=12)}
+\NormalTok{y <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(dfLog}\OperatorTok{$}\NormalTok{TARGET_FLAG)}
+\NormalTok{fit =}\StringTok{ }\KeywordTok{glmnet}\NormalTok{(X, y, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(ROCR)}
+\NormalTok{aucDF <-}\StringTok{ }\NormalTok{X}
+\NormalTok{lasso.model =}\StringTok{ }\KeywordTok{cv.glmnet}\NormalTok{(X, y, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{type.measure =} \StringTok{'class'}\NormalTok{)}
+
+\NormalTok{aucDF}\OperatorTok{$}\NormalTok{lasso.prob <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(lasso.model, }\DataTypeTok{type=}\StringTok{"response"}\NormalTok{, }\DataTypeTok{newx =}\NormalTok{ X, }\DataTypeTok{s =} \StringTok{'lambda.1se'}\NormalTok{)}
+\NormalTok{pred <-}\StringTok{ }\KeywordTok{prediction}\NormalTok{(aucDF}\OperatorTok{$}\NormalTok{lasso.prob, y)}
+
+
+\NormalTok{cvfit =}\StringTok{ }\KeywordTok{cv.glmnet}\NormalTok{(X, y, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{type.measure =} \StringTok{"class"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(cvfit)}
+\KeywordTok{coef}\NormalTok{(cvfit, }\DataTypeTok{s =} \StringTok{"lambda.1se"}\NormalTok{)}
+\CommentTok{# theoDF <- dfLog %>% select(TARGET_FLAG, KIDSDRIV, AGE, OLDCLAIM, REVOKED, RED_CAR,)}
+\CommentTok{# modTheo <- glm(TARGET_FLAG~., data = theoDF)}
+\CommentTok{# summary(modTheo) %>% xtable()}
+\NormalTok{regressionDiagnostic <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(fit)\{}
+\NormalTok{  ## https://www.statmethods.net/stats/rdiagnostics.html}
+  \KeywordTok{library}\NormalTok{(car) }\CommentTok{# Required}
+  \KeywordTok{print}\NormalTok{(}\KeywordTok{outlierTest}\NormalTok{(fit))}
+  \KeywordTok{qqPlot}\NormalTok{(fit, }\DataTypeTok{main =} \StringTok{'QQ Plot'}\NormalTok{)}
+  \CommentTok{#av.Plots(fit)}
+\NormalTok{  cutoff <-}\StringTok{ }\DecValTok{4}\OperatorTok{/}\NormalTok{((}\KeywordTok{nrow}\NormalTok{(dfCont)}\OperatorTok{-}\KeywordTok{length}\NormalTok{(fit}\OperatorTok{$}\NormalTok{coefficients)}\OperatorTok{-}\DecValTok{2}\NormalTok{)) }
+  \KeywordTok{plot}\NormalTok{(fit, }\DataTypeTok{which=}\DecValTok{4}\NormalTok{, }\DataTypeTok{cook.levels=}\NormalTok{cutoff)}
+  \CommentTok{# Influence Plot }
+  \KeywordTok{influencePlot}\NormalTok{(fit,    }\DataTypeTok{id.method=}\StringTok{"identify"}\NormalTok{, }\DataTypeTok{main=}\StringTok{"Influence Plot"}\NormalTok{, }
+                \DataTypeTok{sub=}\StringTok{"Circle size is proportial to Cook's Distance"}\NormalTok{ )}
+  \KeywordTok{library}\NormalTok{(MASS)}
+\NormalTok{  sresid <-}\StringTok{ }\KeywordTok{studres}\NormalTok{(fit) }
+  \KeywordTok{hist}\NormalTok{(sresid, }\DataTypeTok{freq=}\OtherTok{FALSE}\NormalTok{, }
+       \DataTypeTok{main=}\StringTok{"Distribution of Studentized Residuals"}\NormalTok{)}
+\NormalTok{  xfit<-}\KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(sresid),}\KeywordTok{max}\NormalTok{(sresid),}\DataTypeTok{length=}\DecValTok{40}\NormalTok{) }
+\NormalTok{  yfit<-}\KeywordTok{dnorm}\NormalTok{(xfit) }
+  \KeywordTok{lines}\NormalTok{(xfit, yfit)}
+  \KeywordTok{print}\NormalTok{(}\KeywordTok{ncvTest}\NormalTok{(fit))}
+  \CommentTok{# plot studentized residuals vs. fitted values }
+  \KeywordTok{spreadLevelPlot}\NormalTok{(fit)}
+  \KeywordTok{print}\NormalTok{(}\KeywordTok{durbinWatsonTest}\NormalTok{(fit))}
+\NormalTok{\}}
+\KeywordTok{regressionDiagnostic}\NormalTok{(mod1)}
+\KeywordTok{regressionDiagnostic}\NormalTok{(mod2)}
+\KeywordTok{regressionDiagnostic}\NormalTok{(bcTrans)}
+\NormalTok{AUC <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(df, mod, modelName)\{}
+  \KeywordTok{library}\NormalTok{(plotROC)}
+  \KeywordTok{library}\NormalTok{(pROC)}
+\NormalTok{  prob =}\StringTok{ }\KeywordTok{predict}\NormalTok{(mod,}\DataTypeTok{type =} \KeywordTok{c}\NormalTok{(}\StringTok{"response"}\NormalTok{))}
+\NormalTok{  dfLog}\OperatorTok{$}\NormalTok{prob=prob}
+\NormalTok{  p =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(dfLog, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{d =}\NormalTok{ TARGET_FLAG, }\DataTypeTok{m =}\NormalTok{ prob)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_roc}\NormalTok{(}\DataTypeTok{n.cuts =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'AUC Graph for'}\NormalTok{, modelName)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\StringTok{"False Positive Fraction"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{ylab}\NormalTok{(}\StringTok{'True Positive Fraction'}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_abline}\NormalTok{(}\DataTypeTok{linetype =} \StringTok{'dashed'}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{theme_tufte}\NormalTok{()}
+  
+\NormalTok{  g <-}\StringTok{ }\KeywordTok{roc}\NormalTok{(TARGET_FLAG }\OperatorTok{~}\StringTok{ }\NormalTok{prob, }\DataTypeTok{data =}\NormalTok{ dfLog)}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{list}\NormalTok{(p, g}\OperatorTok{$}\NormalTok{auc))}
+\NormalTok{\}}
+\KeywordTok{AUC}\NormalTok{(}\KeywordTok{select}\NormalTok{(testDF, }\OperatorTok{-}\NormalTok{TARGET_AMT), logMod1, }\StringTok{'Baisic GLM Model'}\NormalTok{)}
+
+\CommentTok{#AUC(select(testDF, -TARGET_AMT), modTheo, 'Theoretical Model')}
+\CommentTok{#testX <- a}
+\NormalTok{fittedGLMcv <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(cvfit, X, }\DataTypeTok{s =} \StringTok{"lambda.1se"}\NormalTok{, }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{)}
+
+\NormalTok{perf <-}\StringTok{ }\KeywordTok{performance}\NormalTok{(pred,}\StringTok{"tpr"}\NormalTok{,}\StringTok{"fpr"}\NormalTok{)}
+\NormalTok{auc <-}\StringTok{  }\KeywordTok{performance}\NormalTok{(pred,}\StringTok{"auc"}\NormalTok{) }\CommentTok{# shows calculated AUC for model}
+\NormalTok{auc <-}\StringTok{ }\NormalTok{auc}\OperatorTok{@}\NormalTok{y.values}
+
+\NormalTok{roc.data <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{fpr=}\KeywordTok{unlist}\NormalTok{(perf}\OperatorTok{@}\NormalTok{x.values),}
+                       \DataTypeTok{tpr=}\KeywordTok{unlist}\NormalTok{(perf}\OperatorTok{@}\NormalTok{y.values))}
+
+\KeywordTok{ggplot}\NormalTok{(roc.data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{fpr, }\DataTypeTok{ymin=}\DecValTok{0}\NormalTok{, }\DataTypeTok{ymax=}\NormalTok{tpr)) }\OperatorTok{+}
+\StringTok{    }\CommentTok{#geom_ribbon(alpha=0.2) +}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{tpr)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_abline}\NormalTok{(}\DataTypeTok{slope=}\DecValTok{1}\NormalTok{, }\DataTypeTok{intercept=}\DecValTok{0}\NormalTok{, }\DataTypeTok{linetype=}\StringTok{'dashed'}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"ROC Curve"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{ylab}\NormalTok{(}\StringTok{'True Positive Rate'}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\StringTok{'False Positive Rate'}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_tufte}\NormalTok{()}
+\NormalTok{auc}
+\CommentTok{#evalDF <- evalDF %>% select(-CONTAINS_NA)}
+\KeywordTok{predict}\NormalTok{(mod2,}\DataTypeTok{newdata =}\NormalTok{ evalDF) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{()}
+\KeywordTok{predict}\NormalTok{(logMod1, }\DataTypeTok{newdata =}\NormalTok{ evalDF) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
