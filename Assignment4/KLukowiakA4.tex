@@ -1,0 +1,1252 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Assignment 4},
+            pdfauthor={Kai Lukowiak},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{Assignment 4}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Kai Lukowiak}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{2018-03-25}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage[normalem]{ulem}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This paper looks into the predictive ability of certain factors into the
+likelyhood of a person getting into an accident and also the amount that
+the accident will cost.
+\end{abstract}
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\hypertarget{data-exploration}{%
+\section{Data Exploration}\label{data-exploration}}
+
+\hypertarget{the-data-frames}{%
+\subsection{The Data Frames}\label{the-data-frames}}
+
+\begin{longtable}[]{@{}rrrrrrrl@{}}
+\caption{Sample of Values for the Training Set}\tabularnewline
+\toprule
+TARGET\_FLAG & TARGET\_AMT & KIDSDRIV & AGE & HOMEKIDS & YOJ & INCOME &
+PARENT1\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+TARGET\_FLAG & TARGET\_AMT & KIDSDRIV & AGE & HOMEKIDS & YOJ & INCOME &
+PARENT1\tabularnewline
+\midrule
+\endhead
+0 & 0.000 & 0 & 30 & 2 & 13 & 103881 & No\tabularnewline
+1 & 2044.217 & 0 & 33 & 0 & 9 & 69641 & No\tabularnewline
+0 & 0.000 & 0 & 46 & 0 & 12 & 88359 & No\tabularnewline
+0 & 0.000 & 0 & 27 & 3 & 7 & 131567 & Yes\tabularnewline
+0 & 0.000 & 0 & 51 & 0 & 13 & 85345 & No\tabularnewline
+0 & 0.000 & 0 & 35 & 1 & 10 & 16039 & No\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}rllllrlrr@{}}
+\caption{Sample of Values for the Training Set}\tabularnewline
+\toprule
+HOME\_VAL & MSTATUS & SEX & EDUCATION & JOB & TRAVTIME & CAR\_USE &
+BLUEBOOK & TIF\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+HOME\_VAL & MSTATUS & SEX & EDUCATION & JOB & TRAVTIME & CAR\_USE &
+BLUEBOOK & TIF\tabularnewline
+\midrule
+\endhead
+287047 & Yes & M & Bachelors & z\_Blue Collar & 33 & Commercial & 14890
+& 1\tabularnewline
+230290 & z\_No & M & Bachelors & z\_Blue Collar & 33 & Commercial &
+22680 & 1\tabularnewline
+267679 & Yes & z\_F & Masters & Lawyer & 25 & Private & 31980 &
+3\tabularnewline
+0 & z\_No & z\_F & Bachelors & Professional & 32 & Private & 8790 &
+1\tabularnewline
+NA & Yes & M & Masters & NA & 37 & Commercial & 34270 & 4\tabularnewline
+124191 & Yes & z\_F & z\_High School & Clerical & 5 & Private & 4010 &
+4\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}llrrlrrl@{}}
+\caption{Sample of Values for the Training Set}\tabularnewline
+\toprule
+CAR\_TYPE & RED\_CAR & OLDCLAIM & CLM\_FREQ & REVOKED & MVR\_PTS &
+CAR\_AGE & URBANICITY\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+CAR\_TYPE & RED\_CAR & OLDCLAIM & CLM\_FREQ & REVOKED & MVR\_PTS &
+CAR\_AGE & URBANICITY\tabularnewline
+\midrule
+\endhead
+Minivan & no & 0 & 0 & No & 1 & 9 & z\_Highly Rural/
+Rural\tabularnewline
+Panel Truck & yes & 1712 & 4 & No & 2 & 15 & Highly Urban/
+Urban\tabularnewline
+Minivan & no & 0 & 0 & Yes & 0 & 1 & Highly Urban/ Urban\tabularnewline
+Minivan & no & 0 & 0 & No & 3 & 1 & Highly Urban/ Urban\tabularnewline
+Panel Truck & no & 8481 & 3 & No & 5 & 15 & Highly Urban/
+Urban\tabularnewline
+z\_SUV & no & 38690 & 2 & No & 3 & 10 & Highly Urban/
+Urban\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{verbatim}
+## Observations: 6,121
+## Variables: 25
+## $ TARGET_FLAG <int> 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0,...
+## $ TARGET_AMT  <dbl> 0.000, 0.000, 0.000, 0.000, 0.000, 2946.000, 0.000...
+## $ KIDSDRIV    <int> 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
+## $ AGE         <int> 60, 43, 35, 51, 50, 34, 54, 37, 34, 50, 53, 43, 55...
+## $ HOMEKIDS    <int> 0, 0, 1, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 3,...
+## $ YOJ         <int> 11, 11, 10, 14, NA, 12, NA, NA, 10, 7, 14, 5, 11, ...
+## $ INCOME      <dbl> 67349, 91449, 16039, NA, 114986, 125301, 18755, 10...
+## $ PARENT1     <fct> No, No, No, No, No, Yes, No, No, No, No, No, No, N...
+## $ HOME_VAL    <dbl> 0, 257252, 124191, 306251, 243925, 0, NA, 333680, ...
+## $ MSTATUS     <fct> z_No, z_No, Yes, Yes, Yes, z_No, Yes, Yes, z_No, z...
+## $ SEX         <fct> M, M, z_F, M, z_F, z_F, z_F, M, z_F, M, z_F, z_F, ...
+## $ EDUCATION   <fct> PhD, z_High School, z_High School, <High School, P...
+## $ JOB         <fct> Professional, z_Blue Collar, Clerical, z_Blue Coll...
+## $ TRAVTIME    <int> 14, 22, 5, 32, 36, 46, 33, 44, 34, 48, 15, 36, 25,...
+## $ CAR_USE     <fct> Private, Commercial, Private, Private, Private, Co...
+## $ BLUEBOOK    <dbl> 14230, 14940, 4010, 15440, 18000, 17430, 8780, 169...
+## $ TIF         <int> 11, 1, 4, 7, 1, 1, 1, 1, 1, 7, 1, 7, 7, 6, 1, 6, 7...
+## $ CAR_TYPE    <fct> Minivan, Minivan, z_SUV, Minivan, z_SUV, Sports Ca...
+## $ RED_CAR     <fct> yes, yes, no, yes, no, no, no, yes, no, no, no, no...
+## $ OLDCLAIM    <dbl> 4461, 0, 38690, 0, 19217, 0, 0, 2374, 0, 0, 0, 0, ...
+## $ CLM_FREQ    <int> 2, 0, 2, 0, 2, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0,...
+## $ REVOKED     <fct> No, No, No, No, Yes, No, No, Yes, No, No, No, No, ...
+## $ MVR_PTS     <int> 3, 0, 3, 0, 3, 0, 0, 10, 0, 1, 0, 0, 3, 3, 3, 0, 0...
+## $ CAR_AGE     <int> 18, 1, 10, 6, 17, 7, 1, 7, 1, 17, 11, 1, 9, 10, 5,...
+## $ URBANICITY  <fct> Highly Urban/ Urban, Highly Urban/ Urban, Highly U...
+\end{verbatim}
+
+The trainind dataset is comprised of 26 variables, two of which are
+response variables, \texttt{TARGET\_FLAG} and \texttt{TARGET\_AMT}.
+These will be used to run logistic and regular regression respectivly.
+
+The evaluation set looks similar but has \texttt{NA}s in the first two
+rows.
+
+\begin{longtable}[]{@{}rrrrrlrl@{}}
+\caption{Sample of Values for the Test Set}\tabularnewline
+\toprule
+KIDSDRIV & AGE & HOMEKIDS & YOJ & INCOME & PARENT1 & HOME\_VAL &
+MSTATUS\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+KIDSDRIV & AGE & HOMEKIDS & YOJ & INCOME & PARENT1 & HOME\_VAL &
+MSTATUS\tabularnewline
+\midrule
+\endhead
+0 & 47 & 0 & 12 & 36150 & No & 174964 & Yes\tabularnewline
+0 & 57 & 0 & 10 & 130831 & No & 365792 & Yes\tabularnewline
+0 & 50 & 0 & 14 & 15989 & No & 117038 & Yes\tabularnewline
+0 & 47 & 0 & 14 & 2825 & No & 91520 & Yes\tabularnewline
+0 & 58 & 0 & 12 & 73283 & No & 251025 & Yes\tabularnewline
+0 & 39 & 3 & 14 & 51524 & Yes & 0 & z\_No\tabularnewline
+\bottomrule
+\end{longtable}
+
+The evaluation set is a similar data frame but excludes the target
+variable. As such it cannot be used for cross validation.
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   `Variable Name` = col_character(),
+##   Definition = col_character(),
+##   `Theoretical Effect` = col_character()
+## )
+\end{verbatim}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+Variable Name & Definition & Theoretical Effect\tabularnewline
+\midrule
+\endhead
+INDEX & Index & None\tabularnewline
+TARGET\_FLAG & Identification Variable (do not use) &
+None\tabularnewline
+TARGET\_AMT & Was Car in crash 1=YES 0=NO & None\tabularnewline
+AGE & Age of Driver & Very young people tend to be risky. Maybe very old
+people also.\tabularnewline
+BLUEBOOK & Value of Vehicle & Unknown effect on probability of
+collision, but probably effect the payout if there is a
+crash\tabularnewline
+CAR\_AGE & Vehicle Age & Unknown effect on probability of collision, but
+probably effect the payout if there is a crash\tabularnewline
+CAR\_TYPE & Type of Car & Unknown effect on probability of collision,
+but probably effect the payout if there is a crash\tabularnewline
+CAR\_USE & Vehicle Use & Commercial vehicles are driven more, so might
+increase probability of collision\tabularnewline
+CLM\_FREQ & \# Claims (Past 5 Years) & The more claims you filed in the
+past, the more you are likely to file in the future\tabularnewline
+EDUCATION & Max Education Level & Unknown effect, but in theory more
+educated people tend to drive more safely\tabularnewline
+HOMEKIDS & \# Children at Home & Unknown effect\tabularnewline
+HOME\_VAL & Home Value & In theory, home owners tend to drive more
+responsibly\tabularnewline
+INCOME & Income & In theory, rich people tend to get into fewer
+crashes\tabularnewline
+JOB & Job Category & In theory, white collar jobs tend to be
+safer\tabularnewline
+KIDSDRIV & \# Driving Children & When teenagers drive your car, you are
+more likely to get into crashes\tabularnewline
+MSTATUS & Matitial Status & In theory, married people drive more
+safely\tabularnewline
+MVR\_PTS & Motor Vehicle Record Points & If you get lots of traffic
+tickets, you tend to get into more crashes\tabularnewline
+OLDCLAIM & Total Claims (Past 5 Years) & If your total payout over the
+past five years was high, this suggests future payouts will be
+high\tabularnewline
+PARENT1 & Single Parent & Unknown effect\tabularnewline
+RED\_CAR & A red Car & Urban legend says that red cars (especially red
+sports cars) are more risky. Is that true?\tabularnewline
+REVOKED & License Revoked (Past 7 Years) & If your license was revoked
+in the past 7 years, you probably are a more risky
+driver.\tabularnewline
+Sex & Time in Force & Urban legend says that women have less crashes
+then men. Is that true?\tabularnewline
+TIF & Time in Force & People who have been customers for a long time are
+usually more safe.\tabularnewline
+TRAVTIME & Distance to Work & Long drives to work usually suggest
+greater risk\tabularnewline
+URBANCITY & Home/Work Area & Unknown\tabularnewline
+YOJ & Years on Job & People who stay at a job for a long time are
+usually more safe\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{summary-statistics}{%
+\subsection{Summary Statistics}\label{summary-statistics}}
+
+\begin{longtable}[]{@{}lcccccc@{}}
+\caption{Summary Statistics}\tabularnewline
+\toprule
+& TARGET\_FLAG & TARGET\_AMT & KIDSDRIV & AGE & HOMEKIDS &
+YOJ\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& TARGET\_FLAG & TARGET\_AMT & KIDSDRIV & AGE & HOMEKIDS &
+YOJ\tabularnewline
+\midrule
+\endhead
+& Min. :0.0000 & Min. : 0 & Min. :0.0000 & Min. :16.00 & Min. :0.0000 &
+Min. : 0.00\tabularnewline
+& 1st Qu.:0.0000 & 1st Qu.: 0 & 1st Qu.:0.0000 & 1st Qu.:39.00 & 1st
+Qu.:0.0000 & 1st Qu.: 9.00\tabularnewline
+& Median :0.0000 & Median : 0 & Median :0.0000 & Median :45.00 & Median
+:0.0000 & Median :11.00\tabularnewline
+& Mean :0.2638 & Mean : 1514 & Mean :0.1704 & Mean :44.68 & Mean :0.7298
+& Mean :10.53\tabularnewline
+& 3rd Qu.:1.0000 & 3rd Qu.: 1029 & 3rd Qu.:0.0000 & 3rd Qu.:51.00 & 3rd
+Qu.:1.0000 & 3rd Qu.:13.00\tabularnewline
+& Max. :1.0000 & Max. :107586 & Max. :4.0000 & Max. :73.00 & Max.
+:5.0000 & Max. :19.00\tabularnewline
+& NA & NA & NA & NA's :3 & NA & NA's :347\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}lclclccc@{}}
+\caption{Summary Statistics}\tabularnewline
+\toprule
+& INCOME & PARENT1 & HOME\_VAL & MSTATUS & SEX & EDUCATION &
+JOB\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& INCOME & PARENT1 & HOME\_VAL & MSTATUS & SEX & EDUCATION &
+JOB\tabularnewline
+\midrule
+\endhead
+& Min. : 0 & No :5289 & Min. : 0 & Yes :3659 & M :2827 & \textless{}High
+School : 933 & z\_Blue Collar:1375\tabularnewline
+& 1st Qu.: 27658 & Yes: 832 & 1st Qu.: 0 & z\_No:2462 & z\_F:3294 &
+Bachelors :1693 & Clerical : 961\tabularnewline
+& Median : 53904 & NA & Median :159417 & NA & NA & Masters :1240 &
+Professional : 834\tabularnewline
+& Mean : 61890 & NA & Mean :154164 & NA & NA & PhD : 541 & Manager :
+738\tabularnewline
+& 3rd Qu.: 86464 & NA & 3rd Qu.:238931 & NA & NA & z\_High School:1714 &
+Lawyer : 615\tabularnewline
+& Max. :367030 & NA & Max. :885282 & NA & NA & NA & (Other)
+:1191\tabularnewline
+& NA's :343 & NA & NA's :344 & NA & NA & NA & NA's : 407\tabularnewline
+\bottomrule
+\end{longtable}
+
+These tables give an overview of the variables, suggesting there may be
+some issues with distributions but we will need to look further before
+making any decisions on transforming the variables.
+
+\hypertarget{descriptive-statistics}{%
+\subsection{Descriptive Statistics}\label{descriptive-statistics}}
+
+\begin{longtable}[]{@{}lrrrrr@{}}
+\caption{Descriptive Statistics}\tabularnewline
+\toprule
+& vars & n & mean & sd & median\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& vars & n & mean & sd & median\tabularnewline
+\midrule
+\endhead
+TARGET\_FLAG & 1 & 6121 & 2.638458e-01 & 4.407527e-01 &
+0.0\tabularnewline
+TARGET\_AMT & 2 & 6121 & 1.514009e+03 & 4.776983e+03 &
+0.0\tabularnewline
+KIDSDRIV & 3 & 6121 & 1.703970e-01 & 5.102345e-01 & 0.0\tabularnewline
+AGE & 4 & 6118 & 4.467980e+01 & 8.647718e+00 & 45.0\tabularnewline
+HOMEKIDS & 5 & 6121 & 7.297827e-01 & 1.122196e+00 & 0.0\tabularnewline
+YOJ & 6 & 5774 & 1.053152e+01 & 4.084161e+00 & 11.0\tabularnewline
+INCOME & 7 & 5778 & 6.188946e+04 & 4.785552e+04 & 53903.5\tabularnewline
+PARENT1* & 8 & 6121 & 1.135925e+00 & 3.427374e-01 & 1.0\tabularnewline
+HOME\_VAL & 9 & 5777 & 1.541642e+05 & 1.303360e+05 &
+159417.0\tabularnewline
+MSTATUS* & 10 & 6121 & 1.402222e+00 & 4.903863e-01 & 1.0\tabularnewline
+SEX* & 11 & 6121 & 1.538147e+00 & 4.985834e-01 & 2.0\tabularnewline
+EDUCATION* & 12 & 6121 & 3.066982e+00 & 1.445894e+00 &
+3.0\tabularnewline
+JOB* & 13 & 5714 & 5.008050e+00 & 2.468908e+00 & 5.0\tabularnewline
+TRAVTIME & 14 & 6121 & 3.347100e+01 & 1.593407e+01 & 33.0\tabularnewline
+CAR\_USE* & 15 & 6121 & 1.627022e+00 & 4.836359e-01 & 2.0\tabularnewline
+BLUEBOOK & 16 & 6121 & 1.567134e+04 & 8.455444e+03 &
+14380.0\tabularnewline
+TIF & 17 & 6121 & 5.349616e+00 & 4.106822e+00 & 4.0\tabularnewline
+CAR\_TYPE* & 18 & 6121 & 3.521157e+00 & 1.960455e+00 &
+3.0\tabularnewline
+RED\_CAR* & 19 & 6121 & 1.290802e+00 & 4.541695e-01 & 1.0\tabularnewline
+OLDCLAIM & 20 & 6121 & 4.070660e+03 & 8.867756e+03 & 0.0\tabularnewline
+CLM\_FREQ & 21 & 6121 & 7.952949e-01 & 1.152753e+00 & 0.0\tabularnewline
+REVOKED* & 22 & 6121 & 1.121549e+00 & 3.267906e-01 & 1.0\tabularnewline
+MVR\_PTS & 23 & 6121 & 1.719164e+00 & 2.150401e+00 & 1.0\tabularnewline
+CAR\_AGE & 24 & 5735 & 8.334612e+00 & 5.747126e+00 & 8.0\tabularnewline
+URBANICITY* & 25 & 6121 & 1.207156e+00 & 4.053012e-01 &
+1.0\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\caption{Descriptive Statistics}\tabularnewline
+\toprule
+& trimmed & mad & min & max\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& trimmed & mad & min & max\tabularnewline
+\midrule
+\endhead
+TARGET\_FLAG & 2.048193e-01 & 0.0000 & 0 & 1.0\tabularnewline
+TARGET\_AMT & 5.889851e+02 & 0.0000 & 0 & 107586.1\tabularnewline
+KIDSDRIV & 2.470900e-02 & 0.0000 & 0 & 4.0\tabularnewline
+AGE & 4.473284e+01 & 8.8956 & 16 & 73.0\tabularnewline
+HOMEKIDS & 5.064325e-01 & 0.0000 & 0 & 5.0\tabularnewline
+YOJ & 1.110736e+01 & 2.9652 & 0 & 19.0\tabularnewline
+INCOME & 5.676326e+04 & 42610.6653 & 0 & 367030.0\tabularnewline
+PARENT1* & 1.044925e+00 & 0.0000 & 1 & 2.0\tabularnewline
+HOME\_VAL & 1.428207e+05 & 152887.1946 & 0 & 885282.0\tabularnewline
+MSTATUS* & 1.377782e+00 & 0.0000 & 1 & 2.0\tabularnewline
+SEX* & 1.547682e+00 & 0.0000 & 1 & 2.0\tabularnewline
+EDUCATION* & 3.083725e+00 & 1.4826 & 1 & 5.0\tabularnewline
+JOB* & 5.134952e+00 & 2.9652 & 1 & 8.0\tabularnewline
+TRAVTIME & 3.301062e+01 & 16.3086 & 5 & 142.0\tabularnewline
+CAR\_USE* & 1.658771e+00 & 0.0000 & 1 & 2.0\tabularnewline
+BLUEBOOK & 1.498274e+04 & 8510.1240 & 1500 & 69740.0\tabularnewline
+TIF & 4.854605e+00 & 4.4478 & 1 & 25.0\tabularnewline
+CAR\_TYPE* & 3.526445e+00 & 2.9652 & 1 & 6.0\tabularnewline
+RED\_CAR* & 1.238513e+00 & 0.0000 & 1 & 2.0\tabularnewline
+OLDCLAIM & 1.727992e+03 & 0.0000 & 0 & 57037.0\tabularnewline
+CLM\_FREQ & 5.860731e-01 & 0.0000 & 0 & 5.0\tabularnewline
+REVOKED* & 1.026955e+00 & 0.0000 & 1 & 2.0\tabularnewline
+MVR\_PTS & 1.341842e+00 & 1.4826 & 0 & 13.0\tabularnewline
+CAR\_AGE & 7.954892e+00 & 7.4130 & 0 & 28.0\tabularnewline
+URBANICITY* & 1.133960e+00 & 0.0000 & 1 & 2.0\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\caption{Descriptive Statistics}\tabularnewline
+\toprule
+& range & skew & kurtosis & se\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& range & skew & kurtosis & se\tabularnewline
+\midrule
+\endhead
+TARGET\_FLAG & 1.0 & 1.0714201 & -0.8521981 & 0.0056336\tabularnewline
+TARGET\_AMT & 107586.1 & 8.7901683 & 115.2132560 &
+61.0579864\tabularnewline
+KIDSDRIV & 4.0 & 3.3505408 & 11.7603038 & 0.0065217\tabularnewline
+AGE & 57.0 & -0.0564481 & -0.0854251 & 0.1105597\tabularnewline
+HOMEKIDS & 5.0 & 1.3343569 & 0.6505442 & 0.0143436\tabularnewline
+YOJ & 19.0 & -1.2180676 & 1.1808636 & 0.0537483\tabularnewline
+INCOME & 367030.0 & 1.2145580 & 2.2994723 & 629.5688594\tabularnewline
+PARENT1* & 1.0 & 2.1241626 & 2.5124772 & 0.0043808\tabularnewline
+HOME\_VAL & 885282.0 & 0.5294461 & 0.0815993 &
+1714.7992717\tabularnewline
+MSTATUS* & 1.0 & 0.3987149 & -1.8413272 & 0.0062680\tabularnewline
+SEX* & 1.0 & -0.1529980 & -1.9769145 & 0.0063727\tabularnewline
+EDUCATION* & 4.0 & 0.1363664 & -1.3715543 & 0.0184810\tabularnewline
+JOB* & 7.0 & -0.3418602 & -1.1629758 & 0.0326614\tabularnewline
+TRAVTIME & 137.0 & 0.4428075 & 0.7156313 & 0.2036646\tabularnewline
+CAR\_USE* & 1.0 & -0.5251925 & -1.7244545 & 0.0061817\tabularnewline
+BLUEBOOK & 68240.0 & 0.8097543 & 0.8315495 & 108.0749994\tabularnewline
+TIF & 24.0 & 0.8608451 & 0.3166601 & 0.0524922\tabularnewline
+CAR\_TYPE* & 5.0 & 0.0052126 & -1.5099694 & 0.0250580\tabularnewline
+RED\_CAR* & 1.0 & 0.9210819 & -1.1517962 & 0.0058051\tabularnewline
+OLDCLAIM & 57037.0 & 3.1274684 & 9.9061482 & 113.3450445\tabularnewline
+CLM\_FREQ & 5.0 & 1.2115436 & 0.3061895 & 0.0147342\tabularnewline
+REVOKED* & 1.0 & 2.3157911 & 3.3634379 & 0.0041769\tabularnewline
+MVR\_PTS & 13.0 & 1.3131263 & 1.2250866 & 0.0274858\tabularnewline
+CAR\_AGE & 28.0 & 0.2984052 & -0.7372102 & 0.0758899\tabularnewline
+URBANICITY* & 1.0 & 1.4448340 & 0.0875597 & 0.0051804\tabularnewline
+\bottomrule
+\end{longtable}
+
+The count of NA values for each variable is given below.
+
+\begin{table}
+\caption{Count of NA Values}
+
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+3\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+347\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+343\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{Count of NA Values}
+
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+344\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+407\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{Count of NA Values}
+
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+386\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{r}
+\hline
+x\\
+\hline
+0\\
+\hline
+\end{tabular}
+\end{table}
+
+There are quite a few missing values accross several variables. However,
+compared to the size of the training set, around 6000, these numbers
+could be dropped if there is no correlation between the missing values
+and the response variables.
+
+The correlation between missing values and the `Claim Filed' response is
+-3.1516899\times 10\^{}\{-4\} and 0.0086636 for the claim amount. Since
+these are very close to zero we are not worried about them effecting the
+regressions. As such, we will drop them.
+
+\hypertarget{graphical-eda}{%
+\subsection{Graphical EDA}\label{graphical-eda}}
+
+\begin{verbatim}
+## Warning: Removed 1423 rows containing non-finite values (stat_ydensity).
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+The distrobutions are generally skeded upwards, nothing suggests
+problems with the dataset. The only variable that is very skewed is
+\texttt{TARGET\_AMT} and this makes sense because most are zero or low
+and some are very high.
+
+\begin{verbatim}
+## Warning: Removed 1423 rows containing non-finite values (stat_boxplot).
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+From these two graphs we can see that many of distributions are skewed
+in one direction or another. It is also interesting to see that the
+target variable is below zero. This means that the median and mean
+values are different.
+
+\begin{verbatim}
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+\end{verbatim}
+
+\includegraphics{KLukowiakA4_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+The factor variables some uneven counts as well but nothing that is
+highly out of the ordinary.
+
+\hypertarget{data-preperation}{%
+\section{Data Preperation}\label{data-preperation}}
+
+\hypertarget{transformed-skewed-variables}{%
+\subsection{Transformed Skewed
+Variables}\label{transformed-skewed-variables}}
+
+I will log transform \texttt{TARGET\_AMT} in one of the models that
+build to account for the wide range. During this transformation it is
+important to add 1 to each variable because there are many zero values
+that would throw and error.
+
+\hypertarget{build-models}{%
+\section{Build Models}\label{build-models}}
+
+This project will focus on automated variable selection. New techniques
+will be compared to the basic logistic regression.
+
+\hypertarget{baisic-regression}{%
+\subsection{Baisic Regression}\label{baisic-regression}}
+
+Here I regressed all variables without transformation.
+
+Call: lm(formula = TARGET\_AMT \textasciitilde{} ., data = dfCont)
+
+Residuals: Min 1Q Median 3Q Max -5602 -1702 -733 419 82515
+
+Coefficients: (1 not defined because of singularities) Estimate Std.
+Error t value Pr(\textgreater{}\textbar{}t\textbar{})\\
+(Intercept) 2.206e+03 6.267e+02 3.520 0.000436 \textbf{\emph{ KIDSDRIV
+2.624e+02 1.487e+02 1.765 0.077705 .\\
+AGE -5.843e+00 9.387e+00 -0.622 0.533648\\
+HOMEKIDS -3.457e+01 8.506e+01 -0.406 0.684471\\
+YOJ -8.626e+00 1.944e+01 -0.444 0.657279\\
+INCOME -2.588e-03 2.719e-03 -0.952 0.341152\\
+PARENT1Yes 6.711e+02 2.643e+02 2.539 0.011153 }\\
+HOME\_VAL -1.373e-03 8.504e-04 -1.615 0.106471\\
+MSTATUSz\_No 4.870e+02 2.001e+02 2.434 0.014982 *\\
+SEXz\_F -3.404e+02 2.408e+02 -1.414 0.157515\\
+EDUCATIONBachelors -3.255e+02 2.662e+02 -1.222 0.221603\\
+EDUCATIONMasters -3.557e+02 4.018e+02 -0.885 0.376129\\
+EDUCATIONPhD 5.905e+02 4.993e+02 1.183 0.236960\\
+EDUCATIONz\_High School -1.534e+02 2.200e+02 -0.697 0.485834\\
+JOBDoctor -1.365e+03 5.902e+02 -2.313 0.020762 *\\
+JOBHome Maker 1.498e+01 3.263e+02 0.046 0.963375\\
+JOBLawyer 1.771e+02 4.001e+02 0.443 0.658116\\
+JOBManager -9.372e+02 3.075e+02 -3.048 0.002320 } JOBProfessional
+2.831e+02 2.825e+02 1.002 0.316268\\
+JOBStudent -2.023e+02 3.145e+02 -0.643 0.520122\\
+JOBz\_Blue Collar 8.733e+01 2.464e+02 0.354 0.723062\\
+TRAVTIME 1.666e+01 4.277e+00 3.895 9.98e-05 \textbf{\emph{
+CAR\_USEPrivate -8.516e+02 2.169e+02 -3.926 8.76e-05 }} BLUEBOOK
+1.124e-02 1.139e-02 0.987 0.323848\\
+TIF -4.546e+01 1.639e+01 -2.773 0.005570 ** CAR\_TYPEPanel Truck
+3.648e+02 3.928e+02 0.929 0.353128\\
+CAR\_TYPEPickup 4.390e+02 2.222e+02 1.975 0.048285 *\\
+CAR\_TYPESports Car 1.304e+03 2.773e+02 4.704 2.63e-06 \textbf{\emph{
+CAR\_TYPEVan 5.659e+02 2.912e+02 1.943 0.052050 .\\
+CAR\_TYPEz\_SUV 7.651e+02 2.299e+02 3.328 0.000881 }} RED\_CARyes
+-1.374e+02 2.034e+02 -0.676 0.499234\\
+OLDCLAIM -7.776e-03 9.851e-03 -0.789 0.429963\\
+CLM\_FREQ 5.019e+01 7.386e+01 0.680 0.496839\\
+REVOKEDYes 3.721e+02 2.356e+02 1.580 0.114251\\
+MVR\_PTS 1.654e+02 3.434e+01 4.817 1.51e-06 \textbf{\emph{ CAR\_AGE
+-2.414e+01 1.720e+01 -1.404 0.160504\\
+URBANICITYz\_Highly Rural/ Rural -1.918e+03 1.814e+02 -10.573
+\textless{} 2e-16 }} CONTAINS\_NATRUE NA NA NA NA\\
+--- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 `'
+1
+
+Residual standard error: 4494 on 4468 degrees of freedom (1616
+observations deleted due to missingness) Multiple R-squared: 0.07951,
+Adjusted R-squared: 0.07209 F-statistic: 10.72 on 36 and 4468 DF,
+p-value: \textless{} 2.2e-16
+
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
+  \hline
+(Intercept) & 2205.8267 & 626.6696 & 3.52 & 0.0004 \\ 
+  KIDSDRIV & 262.4222 & 148.7179 & 1.76 & 0.0777 \\ 
+  AGE & -5.8431 & 9.3867 & -0.62 & 0.5336 \\ 
+  HOMEKIDS & -34.5669 & 85.0574 & -0.41 & 0.6845 \\ 
+  YOJ & -8.6264 & 19.4418 & -0.44 & 0.6573 \\ 
+  INCOME & -0.0026 & 0.0027 & -0.95 & 0.3412 \\ 
+  PARENT1Yes & 671.0835 & 264.3190 & 2.54 & 0.0112 \\ 
+  HOME\_VAL & -0.0014 & 0.0009 & -1.61 & 0.1065 \\ 
+  MSTATUSz\_No & 487.0461 & 200.1212 & 2.43 & 0.0150 \\ 
+  SEXz\_F & -340.4322 & 240.8064 & -1.41 & 0.1575 \\ 
+  EDUCATIONBachelors & -325.4596 & 266.2361 & -1.22 & 0.2216 \\ 
+  EDUCATIONMasters & -355.6854 & 401.8411 & -0.89 & 0.3761 \\ 
+  EDUCATIONPhD & 590.5059 & 499.2529 & 1.18 & 0.2370 \\ 
+  EDUCATIONz\_High School & -153.3553 & 220.0196 & -0.70 & 0.4858 \\ 
+  JOBDoctor & -1365.2064 & 590.2066 & -2.31 & 0.0208 \\ 
+  JOBHome Maker & 14.9844 & 326.3066 & 0.05 & 0.9634 \\ 
+  JOBLawyer & 177.0661 & 400.1079 & 0.44 & 0.6581 \\ 
+  JOBManager & -937.1852 & 307.5161 & -3.05 & 0.0023 \\ 
+  JOBProfessional & 283.1297 & 282.4885 & 1.00 & 0.3163 \\ 
+  JOBStudent & -202.2700 & 314.4702 & -0.64 & 0.5201 \\ 
+  JOBz\_Blue Collar & 87.3287 & 246.4186 & 0.35 & 0.7231 \\ 
+  TRAVTIME & 16.6590 & 4.2774 & 3.89 & 0.0001 \\ 
+  CAR\_USEPrivate & -851.6084 & 216.9032 & -3.93 & 0.0001 \\ 
+  BLUEBOOK & 0.0112 & 0.0114 & 0.99 & 0.3238 \\ 
+  TIF & -45.4616 & 16.3917 & -2.77 & 0.0056 \\ 
+  CAR\_TYPEPanel Truck & 364.8127 & 392.8476 & 0.93 & 0.3531 \\ 
+  CAR\_TYPEPickup & 438.9739 & 222.2214 & 1.98 & 0.0483 \\ 
+  CAR\_TYPESports Car & 1304.4080 & 277.3126 & 4.70 & 0.0000 \\ 
+  CAR\_TYPEVan & 565.9206 & 291.2254 & 1.94 & 0.0520 \\ 
+  CAR\_TYPEz\_SUV & 765.1174 & 229.8907 & 3.33 & 0.0009 \\ 
+  RED\_CARyes & -137.4282 & 203.3711 & -0.68 & 0.4992 \\ 
+  OLDCLAIM & -0.0078 & 0.0099 & -0.79 & 0.4300 \\ 
+  CLM\_FREQ & 50.1905 & 73.8610 & 0.68 & 0.4968 \\ 
+  REVOKEDYes & 372.1246 & 235.5698 & 1.58 & 0.1143 \\ 
+  MVR\_PTS & 165.4038 & 34.3404 & 4.82 & 0.0000 \\ 
+  CAR\_AGE & -24.1394 & 17.1980 & -1.40 & 0.1605 \\ 
+  URBANICITYz\_Highly Rural/ Rural & -1917.6948 & 181.3748 & -10.57 & 0.0000 \\ 
+   \hline
+\end{tabular}
+
+This is a pretty poor \(R^2\). While there are some significant
+variables, the overall performance is poor.
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(TARGET_AMT + 1) ~ ., data = dfCont)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -8.173 -2.340 -0.850  2.146 11.054 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                   Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                      3.640e+00  4.466e-01   8.150 4.66e-16 ***
+## KIDSDRIV                         3.949e-01  1.060e-01   3.727 0.000197 ***
+## AGE                             -6.131e-03  6.689e-03  -0.916 0.359457    
+## HOMEKIDS                        -2.705e-02  6.061e-02  -0.446 0.655468    
+## YOJ                             -1.264e-02  1.385e-02  -0.912 0.361683    
+## INCOME                          -3.189e-06  1.937e-06  -1.646 0.099790 .  
+## PARENT1Yes                       8.902e-01  1.884e-01   4.726 2.36e-06 ***
+## HOME_VAL                        -1.442e-06  6.060e-07  -2.379 0.017379 *  
+## MSTATUSz_No                      4.756e-01  1.426e-01   3.335 0.000860 ***
+## SEXz_F                          -1.547e-01  1.716e-01  -0.902 0.367280    
+## EDUCATIONBachelors              -5.226e-01  1.897e-01  -2.755 0.005901 ** 
+## EDUCATIONMasters                -4.859e-01  2.864e-01  -1.697 0.089781 .  
+## EDUCATIONPhD                     1.498e-01  3.558e-01   0.421 0.673785    
+## EDUCATIONz_High School           4.030e-02  1.568e-01   0.257 0.797156    
+## JOBDoctor                       -1.388e+00  4.206e-01  -3.299 0.000978 ***
+## JOBHome Maker                   -3.566e-01  2.325e-01  -1.534 0.125162    
+## JOBLawyer                       -2.596e-01  2.851e-01  -0.910 0.362667    
+## JOBManager                      -1.395e+00  2.191e-01  -6.368 2.11e-10 ***
+## JOBProfessional                 -4.193e-01  2.013e-01  -2.083 0.037331 *  
+## JOBStudent                      -4.121e-01  2.241e-01  -1.839 0.065963 .  
+## JOBz_Blue Collar                -3.573e-01  1.756e-01  -2.035 0.041932 *  
+## TRAVTIME                         2.163e-02  3.048e-03   7.095 1.50e-12 ***
+## CAR_USEPrivate                  -1.199e+00  1.546e-01  -7.754 1.10e-14 ***
+## BLUEBOOK                        -2.055e-05  8.115e-06  -2.532 0.011368 *  
+## TIF                             -6.686e-02  1.168e-02  -5.724 1.11e-08 ***
+## CAR_TYPEPanel Truck              5.446e-01  2.800e-01   1.945 0.051794 .  
+## CAR_TYPEPickup                   6.586e-01  1.584e-01   4.159 3.26e-05 ***
+## CAR_TYPESports Car               1.332e+00  1.976e-01   6.740 1.78e-11 ***
+## CAR_TYPEVan                      5.699e-01  2.075e-01   2.746 0.006057 ** 
+## CAR_TYPEz_SUV                    8.588e-01  1.638e-01   5.242 1.66e-07 ***
+## RED_CARyes                      -2.352e-01  1.449e-01  -1.623 0.104640    
+## OLDCLAIM                        -1.883e-05  7.020e-06  -2.682 0.007347 ** 
+## CLM_FREQ                         2.477e-01  5.263e-02   4.706 2.60e-06 ***
+## REVOKEDYes                       1.058e+00  1.679e-01   6.300 3.27e-10 ***
+## MVR_PTS                          1.949e-01  2.447e-02   7.965 2.07e-15 ***
+## CAR_AGE                         -8.615e-03  1.226e-02  -0.703 0.482150    
+## URBANICITYz_Highly Rural/ Rural -2.571e+00  1.293e-01 -19.894  < 2e-16 ***
+## CONTAINS_NATRUE                         NA         NA      NA       NA    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.203 on 4468 degrees of freedom
+##   (1616 observations deleted due to missingness)
+## Multiple R-squared:  0.2429, Adjusted R-squared:  0.2368 
+## F-statistic: 39.81 on 36 and 4468 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+Here we have the output of all provided variables without any
+transformation.
+
+\hypertarget{boxcox}{%
+\subsection{BoxCox}\label{boxcox}}
+
+\begin{verbatim}
+## bcPower Transformation to Normality 
+##    Est Power Rounded Pwr Wald Lwr bnd Wald Upr Bnd
+## Y1   -0.3997        -0.4      -0.4151      -0.3842
+## 
+## Likelihood ratio tests about transformation parameters
+##                             LRT df pval
+## LR test, lambda = (0)  3334.454  1    0
+## LR test, lambda = (1) 48980.134  1    0
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = I((TARGET_AMT + 1)^(-0.4)) ~ ., data = dfCont)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.22372 -0.26618  0.09885  0.27222  0.94841 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                   Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                      5.718e-01  5.158e-02  11.087  < 2e-16 ***
+## KIDSDRIV                        -4.597e-02  1.224e-02  -3.756 0.000175 ***
+## AGE                              7.686e-04  7.725e-04   0.995 0.319821    
+## HOMEKIDS                         3.092e-03  7.000e-03   0.442 0.658701    
+## YOJ                              1.362e-03  1.600e-03   0.851 0.394739    
+## INCOME                           3.641e-07  2.238e-07   1.627 0.103780    
+## PARENT1Yes                      -1.008e-01  2.175e-02  -4.633 3.71e-06 ***
+## HOME_VAL                         1.613e-07  6.999e-08   2.304 0.021244 *  
+## MSTATUSz_No                     -5.537e-02  1.647e-02  -3.362 0.000781 ***
+## SEXz_F                           1.657e-02  1.982e-02   0.836 0.403263    
+## EDUCATIONBachelors               5.935e-02  2.191e-02   2.709 0.006782 ** 
+## EDUCATIONMasters                 5.585e-02  3.307e-02   1.689 0.091322 .  
+## EDUCATIONPhD                    -1.270e-02  4.109e-02  -0.309 0.757357    
+## EDUCATIONz_High School          -4.987e-03  1.811e-02  -0.275 0.783029    
+## JOBDoctor                        1.581e-01  4.858e-02   3.255 0.001140 ** 
+## JOBHome Maker                    4.226e-02  2.686e-02   1.573 0.115690    
+## JOBLawyer                        3.300e-02  3.293e-02   1.002 0.316351    
+## JOBManager                       1.629e-01  2.531e-02   6.438 1.34e-10 ***
+## JOBProfessional                  5.427e-02  2.325e-02   2.334 0.019625 *  
+## JOBStudent                       4.755e-02  2.588e-02   1.837 0.066220 .  
+## JOBz_Blue Collar                 4.227e-02  2.028e-02   2.084 0.037178 *  
+## TRAVTIME                        -2.493e-03  3.520e-04  -7.080 1.66e-12 ***
+## CAR_USEPrivate                   1.393e-01  1.785e-02   7.801 7.62e-15 ***
+## BLUEBOOK                         2.603e-06  9.372e-07   2.778 0.005501 ** 
+## TIF                              7.735e-03  1.349e-03   5.734 1.05e-08 ***
+## CAR_TYPEPanel Truck             -6.329e-02  3.233e-02  -1.957 0.050359 .  
+## CAR_TYPEPickup                  -7.585e-02  1.829e-02  -4.147 3.43e-05 ***
+## CAR_TYPESports Car              -1.518e-01  2.282e-02  -6.650 3.29e-11 ***
+## CAR_TYPEVan                     -6.372e-02  2.397e-02  -2.659 0.007873 ** 
+## CAR_TYPEz_SUV                   -9.798e-02  1.892e-02  -5.179 2.33e-07 ***
+## RED_CARyes                       2.835e-02  1.674e-02   1.694 0.090340 .  
+## OLDCLAIM                         2.323e-06  8.108e-07   2.865 0.004186 ** 
+## CLM_FREQ                        -3.064e-02  6.079e-03  -5.041 4.82e-07 ***
+## REVOKEDYes                      -1.255e-01  1.939e-02  -6.471 1.08e-10 ***
+## MVR_PTS                         -2.202e-02  2.826e-03  -7.791 8.19e-15 ***
+## CAR_AGE                          9.464e-04  1.415e-03   0.669 0.503748    
+## URBANICITYz_Highly Rural/ Rural  2.970e-01  1.493e-02  19.898  < 2e-16 ***
+## CONTAINS_NATRUE                         NA         NA      NA       NA    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3699 on 4468 degrees of freedom
+##   (1616 observations deleted due to missingness)
+## Multiple R-squared:  0.2444, Adjusted R-squared:  0.2383 
+## F-statistic: 40.13 on 36 and 4468 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{verbatim}
+## bcPower Transformations to Multinormality 
+##       Est Power Rounded Pwr Wald Lwr bnd Wald Upr Bnd
+## len      0.1451        0.00      -0.2733       0.5636
+## adt      0.2396        0.33       0.0255       0.4536
+## trks    -0.7336        0.00      -1.9408       0.4735
+## sigs1   -0.2959       -0.50      -0.5511      -0.0408
+## 
+## Likelihood ratio tests about transformation parameters
+##                                  LRT df       pval
+## LR test, lambda = (0 0 0 0)  13.1339  4 0.01063972
+## LR test, lambda = (1 1 1 1) 140.5853  4 0.00000000
+\end{verbatim}
+
+\hypertarget{stepwise-selection-on-baisic-model}{%
+\subsection{Stepwise Selection on Baisic
+Model}\label{stepwise-selection-on-baisic-model}}
+
+If we do a step wise selection to find the variables that limit the
+scope but still provide excellent performance we get:
+
+\hypertarget{lasso-regression}{%
+\subsection{LASSO Regression}\label{lasso-regression}}
+
+Looking at lasso logistic regression might give us a better model
+selection and coefficient values. Below is the results.
+
+\hypertarget{regular-logostic}{%
+\subsection{Regular logostic}\label{regular-logostic}}
+
+This models coefficients deviate significantly from a normal
+\texttt{glm} model that excludes the one variable dropped. This is
+because LASSO penalizes large coefficients. For example, \texttt{glm}
+model excluding \texttt{rm} is:
+
+This is interesting because we can see how different the coefficients
+are even though it has the same variables.
+
+\hypertarget{lasso-with-scaled-variable}{%
+\subsection{Lasso with scaled
+variable}\label{lasso-with-scaled-variable}}
+
+\hypertarget{apendix}{%
+\section{Apendix}\label{apendix}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_knit}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{root.dir =} \StringTok{"/Users/kailukowiak/DATA621/Assignments"}\NormalTok{)}
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo=}\OtherTok{FALSE}\NormalTok{)}
+\CommentTok{# Libraries}
+\NormalTok{##################}
+\KeywordTok{library}\NormalTok{(MASS)}
+\KeywordTok{library}\NormalTok{(car)}
+\KeywordTok{library}\NormalTok{(leaps)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(knitr)}
+\KeywordTok{library}\NormalTok{(kableExtra)}
+\KeywordTok{library}\NormalTok{(psych)}
+\KeywordTok{library}\NormalTok{(ggthemes)}
+\KeywordTok{library}\NormalTok{(corrplot)}
+\KeywordTok{library}\NormalTok{(glmnet)}
+\KeywordTok{library}\NormalTok{(bestglm)}
+\KeywordTok{library}\NormalTok{(xtable)}
+\KeywordTok{library}\NormalTok{(caTools)}
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{xtable.floating =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{xtable.timestamp =} \StringTok{""}\NormalTok{)}
+\NormalTok{####################}
+\NormalTok{moneyCV <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(df)\{}
+  \ControlFlowTok{for}\NormalTok{ (colName }\ControlFlowTok{in} \KeywordTok{names}\NormalTok{(df))\{}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{grepl}\NormalTok{(}\StringTok{'}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{$'}\NormalTok{, df[, colName]))\{}
+\NormalTok{      df[, colName] =}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{$|,"}\NormalTok{, }\StringTok{""}\NormalTok{, df[[colName]]) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{()}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \KeywordTok{return}\NormalTok{(df)}
+\NormalTok{\}}
+
+\NormalTok{factorCV <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(df)\{}
+  \ControlFlowTok{for}\NormalTok{ (colName }\ControlFlowTok{in} \KeywordTok{names}\NormalTok{(df))\{}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{is.character}\NormalTok{(df[[colName]])) \{}
+\NormalTok{      df[, colName] =}\StringTok{ }\NormalTok{df[[colName]] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{as.factor}\NormalTok{()}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \KeywordTok{return}\NormalTok{(df)}
+\NormalTok{\}}
+\CommentTok{# Loading the data}
+
+\NormalTok{LabledDF <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{'Assignment4/insurance_training_data.csv'}\NormalTok{)}
+
+\NormalTok{LabledDF <-}\StringTok{ }\KeywordTok{moneyCV}\NormalTok{(LabledDF)}
+\NormalTok{LabledDF <-}\StringTok{ }\KeywordTok{factorCV}\NormalTok{(LabledDF)}
+\NormalTok{LabledDF <-}\StringTok{ }\NormalTok{LabledDF }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{INDEX)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{101}\NormalTok{) }
+\NormalTok{sample =}\StringTok{ }\KeywordTok{sample.split}\NormalTok{(LabledDF}\OperatorTok{$}\NormalTok{TARGET_FLAG, }\DataTypeTok{SplitRatio =} \FloatTok{.75}\NormalTok{)}
+\NormalTok{df <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(LabledDF, sample }\OperatorTok{==}\StringTok{ }\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{testDF <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(LabledDF, sample }\OperatorTok{==}\StringTok{ }\OtherTok{FALSE}\NormalTok{)}
+\NormalTok{temp <-}\StringTok{ }\NormalTok{df }\OperatorTok{%>%}\StringTok{ }\KeywordTok{sample_n}\NormalTok{(}\DecValTok{6}\NormalTok{)}
+
+\NormalTok{temp[}\DecValTok{1}\OperatorTok{:}\DecValTok{8}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Sample of Values for the Training Set'}\NormalTok{)}
+\NormalTok{temp[}\DecValTok{9}\OperatorTok{:}\DecValTok{17}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Sample of Values for the Training Set'}\NormalTok{)}
+\NormalTok{temp[}\DecValTok{18}\OperatorTok{:}\DecValTok{25}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Sample of Values for the Training Set'}\NormalTok{)}
+\KeywordTok{glimpse}\NormalTok{(df) }
+\NormalTok{evalDF <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{'/Users/kailukowiak/DATA621/Assignments/Assignment4/insurance-evaluation-data.csv'}\NormalTok{)}
+\NormalTok{evalDF <-}\StringTok{ }\KeywordTok{moneyCV}\NormalTok{(evalDF)}
+\NormalTok{evalDF <-}\StringTok{ }\KeywordTok{factorCV}\NormalTok{(evalDF)}
+\NormalTok{evalDF <-}\StringTok{ }\NormalTok{evalDF }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{INDEX, }\OperatorTok{-}\NormalTok{TARGET_AMT, }\OperatorTok{-}\NormalTok{TARGET_FLAG)}
+\NormalTok{temp <-}\StringTok{ }\NormalTok{evalDF }\OperatorTok{%>%}\StringTok{ }\KeywordTok{sample_n}\NormalTok{(}\DecValTok{6}\NormalTok{)}
+\NormalTok{temp[}\DecValTok{1}\OperatorTok{:}\DecValTok{8}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Sample of Values for the Test Set'}\NormalTok{)}
+\NormalTok{###############################}
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"~/DATA621/Assignments"}\NormalTok{)}
+\NormalTok{lables <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{'Assignment4/dataLegend.csv'}\NormalTok{)}
+\NormalTok{lables }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{()}
+\CommentTok{# Summary Tables}
+\NormalTok{SumTab <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(df)}
+\NormalTok{SumTab1 <-}\StringTok{ }\NormalTok{SumTab[, }\DecValTok{1}\OperatorTok{:}\DecValTok{6}\NormalTok{]}
+\NormalTok{SumTab2 <-}\StringTok{ }\NormalTok{SumTab[, }\DecValTok{7}\OperatorTok{:}\DecValTok{13}\NormalTok{]}
+\KeywordTok{kable}\NormalTok{(SumTab1, }\DataTypeTok{caption =} \StringTok{'Summary Statistics'}\NormalTok{)}
+\KeywordTok{kable}\NormalTok{(SumTab2, }\DataTypeTok{caption =} \StringTok{'Summary Statistics'}\NormalTok{)}
+\NormalTok{#####################}
+\NormalTok{dis <-}\StringTok{ }\KeywordTok{describe}\NormalTok{(df)}
+\NormalTok{dis[, }\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Descriptive Statistics'}\NormalTok{)}
+\NormalTok{dis[, }\DecValTok{6}\OperatorTok{:}\DecValTok{9}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Descriptive Statistics'}\NormalTok{)}
+\NormalTok{dis[, }\DecValTok{10}\OperatorTok{:}\DecValTok{13}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Descriptive Statistics'}\NormalTok{)}
+\NormalTok{temp <-}\StringTok{ }\KeywordTok{map}\NormalTok{(df, }\OperatorTok{~}\KeywordTok{sum}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(.))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{t}\NormalTok{()}
+\NormalTok{temp[}\DecValTok{1}\OperatorTok{:}\DecValTok{8}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Count of NA Values'}\NormalTok{)}
+\NormalTok{temp[}\DecValTok{9}\OperatorTok{:}\DecValTok{17}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Count of NA Values'}\NormalTok{)}
+\NormalTok{temp[}\DecValTok{18}\OperatorTok{:}\DecValTok{25}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{kable}\NormalTok{(}\DataTypeTok{caption =} \StringTok{'Count of NA Values'}\NormalTok{)}
+
+\NormalTok{df}\OperatorTok{$}\NormalTok{CONTAINS_NA <-}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(}\KeywordTok{complete.cases}\NormalTok{(df), }\OtherTok{FALSE}\NormalTok{, }\OtherTok{TRUE}\NormalTok{)}
+
+\NormalTok{corFlag <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(df}\OperatorTok{$}\NormalTok{TARGET_FLAG, df}\OperatorTok{$}\NormalTok{CONTAINS_NA)}
+\NormalTok{corAmt <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(df}\OperatorTok{$}\NormalTok{TARGET_AMT, df}\OperatorTok{$}\NormalTok{CONTAINS_NA)}
+\NormalTok{df }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select_if}\NormalTok{(is.numeric) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{scale}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{as_tibble}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{gather}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ key, }\DataTypeTok{y =}\NormalTok{ value)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_tufte}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_violin}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\CommentTok{#geom_tufteboxplot(outlier.colour="black")+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.title=}\KeywordTok{element_blank}\NormalTok{()) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{'Scaled Values'}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{'Variable'}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{'Distrobution of Values'}\NormalTok{, }\DataTypeTok{subtitle =} \StringTok{'Y values scaled to fit a common axis'}\NormalTok{)}
+\NormalTok{df }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select_if}\NormalTok{(is.numeric) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{scale}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{as_tibble}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{gather}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ key, }\DataTypeTok{y =}\NormalTok{ value)) }\OperatorTok{+}
+\StringTok{  }\CommentTok{# geom_violin()+}
+\StringTok{  }\CommentTok{# geom_tufteboxplot(outlier.colour="black", outlier.shape = 22)+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_tufte}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.title=}\KeywordTok{element_blank}\NormalTok{()) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{'Scaled Values'}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{'Variable'}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{'Distrobution of Values'}\NormalTok{, }\DataTypeTok{subtitle =} \StringTok{'Y values scaled to fit a common axis'}\NormalTok{)}
+\NormalTok{df }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select_if}\NormalTok{(is.factor) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{gather}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{value))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_bar}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{key,}\DataTypeTok{scales=}\StringTok{'free_x'}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{))}
+\NormalTok{dfCont <-}\StringTok{ }\NormalTok{df }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{TARGET_FLAG)}
+\NormalTok{dfLog <-}\StringTok{ }\NormalTok{df }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{TARGET_AMT)}
+\NormalTok{mod1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(TARGET_AMT }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ dfCont)}
+\KeywordTok{summary}\NormalTok{(mod1)}
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{xtable.comment =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{xtable}\NormalTok{(}\KeywordTok{summary}\NormalTok{(mod1))}
+\NormalTok{mod2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\KeywordTok{log}\NormalTok{(TARGET_AMT}\OperatorTok{+}\DecValTok{1}\NormalTok{) }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ dfCont) }\CommentTok{# Note the `+1`}
+\KeywordTok{summary}\NormalTok{(mod2)}
+
+\CommentTok{# Box Cox Method, univariate}
+\KeywordTok{summary}\NormalTok{(p1 <-}\StringTok{ }\KeywordTok{powerTransform}\NormalTok{(}\KeywordTok{I}\NormalTok{(TARGET_AMT}\OperatorTok{+}\DecValTok{1}\NormalTok{) }\OperatorTok{~}\StringTok{ }\NormalTok{., dfCont))}
+
+\NormalTok{bcTrans <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\KeywordTok{I}\NormalTok{((TARGET_AMT}\OperatorTok{+}\DecValTok{1}\NormalTok{)}\OperatorTok{^}\NormalTok{(}\OperatorTok{-}\FloatTok{0.4}\NormalTok{)) }\OperatorTok{~}\StringTok{ }\NormalTok{., dfCont)}
+\KeywordTok{summary}\NormalTok{(bcTrans)}
+\CommentTok{#summary(powerTransform(cbind(len, adt, trks, sigs1) ~ 1, Highway1))}
+\KeywordTok{summary}\NormalTok{(a3 <-}\StringTok{ }\KeywordTok{powerTransform}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(len, adt, trks, sigs1) }\OperatorTok{~}\StringTok{ }\NormalTok{htype, Highway1))}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

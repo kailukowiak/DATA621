@@ -1,0 +1,309 @@
+---
+title: "Assignment 4"
+author: "Kai Lukowiak"
+date: '2018-03-25'
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+abstract: "This paper looks into the predictive ability of certain factors into the likelyhood of a person getting into an accident and also the amount that the accident will cost."
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(root.dir = "/Users/kailukowiak/DATA621/Assignments")
+knitr::opts_chunk$set(echo=FALSE)
+```
+
+
+```{r libraries, message=FALSE, warning=FALSE, echo=FALSE}
+# Libraries
+##################
+library(MASS)
+library(car)
+library(leaps)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(psych)
+library(ggthemes)
+library(corrplot)
+library(glmnet)
+library(bestglm)
+library(xtable)
+library(caTools)
+options(xtable.floating = FALSE)
+options(xtable.timestamp = "")
+####################
+```
+
+```{r cleaningFunctions}
+moneyCV <- function(df){
+  for (colName in names(df)){
+    if (grepl('\\$', df[, colName])){
+      df[, colName] = gsub("\\$|,", "", df[[colName]]) %>% as.numeric()
+    }
+  }
+  return(df)
+}
+
+factorCV <- function(df){
+  for (colName in names(df)){
+    if (is.character(df[[colName]])) {
+      df[, colName] = df[[colName]] %>% as.factor()
+    }
+  }
+  return(df)
+}
+```
+
+
+# Data Exploration
+
+## The Data Frames
+
+
+```{r LoadData, warning=F, message=F, echo=FALSE}
+# Loading the data
+
+LabledDF <- read_csv('Assignment4/insurance_training_data.csv')
+
+LabledDF <- moneyCV(LabledDF)
+LabledDF <- factorCV(LabledDF)
+LabledDF <- LabledDF %>% select(-INDEX)
+set.seed(101) 
+sample = sample.split(LabledDF$TARGET_FLAG, SplitRatio = .75)
+df <- subset(LabledDF, sample == TRUE)
+testDF <- subset(LabledDF, sample == FALSE)
+temp <- df %>% sample_n(6)
+
+temp[1:8] %>% kable(caption = 'Sample of Values for the Training Set')
+temp[9:17] %>% kable(caption = 'Sample of Values for the Training Set')
+temp[18:25] %>% kable(caption = 'Sample of Values for the Training Set')
+```
+
+```{r}
+glimpse(df) 
+```
+
+
+The trainind dataset is comprised of 26 variables, two of which are response variables, `TARGET_FLAG` and `TARGET_AMT`. These will be used to run logistic and regular regression respectivly. 
+
+The evaluation set looks similar but has `NA`s in the first two rows.
+
+```{r LoadData2, warning=F, message=F, echo=FALSE}
+evalDF <- read_csv('/Users/kailukowiak/DATA621/Assignments/Assignment4/insurance-evaluation-data.csv')
+evalDF <- moneyCV(evalDF)
+evalDF <- factorCV(evalDF)
+evalDF <- evalDF %>% select(-INDEX, -TARGET_AMT, -TARGET_FLAG)
+temp <- evalDF %>% sample_n(6)
+temp[1:8] %>% kable(caption = 'Sample of Values for the Test Set')
+###############################
+```
+
+
+
+The evaluation set is a similar data frame but excludes the target variable. As such it cannot be used for cross validation.
+
+```{r}
+setwd("~/DATA621/Assignments")
+lables <- read_csv('Assignment4/dataLegend.csv')
+lables %>% kable()
+```
+
+
+## Summary Statistics
+
+
+```{r, echo=FALSE}
+# Summary Tables
+SumTab <- summary(df)
+SumTab1 <- SumTab[, 1:6]
+SumTab2 <- SumTab[, 7:13]
+kable(SumTab1, caption = 'Summary Statistics')
+kable(SumTab2, caption = 'Summary Statistics')
+#####################
+```
+
+
+These tables give an overview of the variables, suggesting there may be some issues with distributions but we will need to look further before making any decisions on transforming the variables.
+
+## Descriptive Statistics
+
+```{r, echo=FALSE}
+dis <- describe(df)
+dis[, 1:5] %>% kable(caption = 'Descriptive Statistics')
+dis[, 6:9] %>% kable(caption = 'Descriptive Statistics')
+dis[, 10:13] %>% kable(caption = 'Descriptive Statistics')
+```
+
+
+The count of NA values for each variable is given below.
+
+```{r echo=FALSE}
+temp <- map(df, ~sum(is.na(.))) %>% t()
+temp[1:8] %>% kable(caption = 'Count of NA Values')
+temp[9:17] %>% kable(caption = 'Count of NA Values')
+temp[18:25] %>% kable(caption = 'Count of NA Values')
+
+```
+
+There are quite a few missing values accross several variables. However, compared to the size of the training set, around 6000, these numbers could be dropped if there is no correlation between the missing values and the response variables.
+
+```{r}
+df$CONTAINS_NA <- ifelse(complete.cases(df), FALSE, TRUE)
+
+corFlag <- cor(df$TARGET_FLAG, df$CONTAINS_NA)
+corAmt <- cor(df$TARGET_AMT, df$CONTAINS_NA)
+```
+
+The correlation between missing values and the 'Claim Filed' response is `r corFlag` and `r corAmt` for the claim amount. Since these are very close to zero we are not worried about them effecting the regressions. As such, we will drop them.
+
+
+
+## Graphical EDA
+
+```{r, echo=FALSE}
+df %>% 
+  select_if(is.numeric) %>% 
+  scale() %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  ggplot(aes(x = key, y = value)) +
+  theme_tufte() +
+  geom_violin()+
+  #geom_tufteboxplot(outlier.colour="black")+
+  theme(axis.title=element_blank()) +
+  ylab('Scaled Values')+
+  xlab('Variable')+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ggtitle('Distrobution of Values', subtitle = 'Y values scaled to fit a common axis')
+```
+
+The distrobutions are generally skeded upwards, nothing suggests problems with the dataset. The only variable that is very skewed is `TARGET_AMT` and this makes sense because most are zero or low and some are very high.
+
+```{r, echo=FALSE}
+df %>% 
+  select_if(is.numeric) %>% 
+  scale() %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  ggplot(aes(x = key, y = value)) +
+  # geom_violin()+
+  # geom_tufteboxplot(outlier.colour="black", outlier.shape = 22)+
+  geom_boxplot()+
+  theme_tufte() +
+  theme(axis.title=element_blank()) +
+  ylab('Scaled Values')+
+  xlab('Variable')+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ggtitle('Distrobution of Values', subtitle = 'Y values scaled to fit a common axis')
+```
+
+
+From these two graphs we can see that many of distributions are skewed in one direction or another. It is also interesting to see that the target variable is below zero. This means that the median and mean values are different. 
+
+
+
+
+```{r}
+df %>% 
+  select_if(is.factor) %>% 
+  gather() %>% 
+  ggplot(aes(x=value))+
+  geom_bar()+
+  facet_wrap(~key,scales='free_x')+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+The factor variables some uneven counts as well but nothing that is highly out of the ordinary.
+
+# Data Preperation
+
+
+
+## Transformed Skewed Variables
+
+I will log transform `TARGET_AMT` in one of the models that build to account for the wide range. During this transformation it is important to add 1 to each variable because there are many zero values that would throw and error. 
+
+I also transformed  `TARGET_AMT` with the power of -0.4 based off of a Box-Cox analysis. Given the nature of other variables it does not seem necessary to transform others.
+
+# Build Models
+
+Model selection will be based off of automated selection techniques as well as specific transformations.
+
+## Ordinary Least Squares
+
+```{r dataSplit}
+dfCont <- df %>% select(-TARGET_FLAG)
+dfLog <- df %>% select(-TARGET_AMT)
+```
+
+### Baisic Regression
+Here I regressed all variables without transformation.
+
+```{r results='asis'}
+mod1 <- lm(TARGET_AMT ~ ., data = dfCont)
+#summary(mod1)
+options(xtable.comment = FALSE)
+xtable(summary(mod1))
+```
+
+This is a pretty poor $R^2$. While there are some significant variables, the overall performance is poor.
+
+### Log Transformed
+Next we look at the regression with a log transformed `TARGET_AMT` variable.
+
+```{r results='asis'}
+mod2 <- lm(log(TARGET_AMT+1) ~ ., data = dfCont) # Note the `+1`
+xtable(summary(mod2))
+```
+
+This is an improvement. It makes sense that we would need to transform the response variable given it's skewed nature.
+
+## BoxCox
+```{r results='asis'}
+
+# Box Cox Method, univariate
+summary(p1 <- powerTransform(I(TARGET_AMT+1) ~ ., dfCont))
+
+bcTrans <- lm(I((TARGET_AMT+1)^(-0.4)) ~ ., dfCont)
+summary(bcTrans) %>% xtable()
+```
+
+
+### Stepwise Selection on Baisic Model
+
+Insert Stepwise or Other
+
+
+
+
+
+## Regular logostic
+
+
+```{r}
+logMod1 <- glm()
+```
+
+
+This models coefficients deviate significantly from a normal `glm` model that excludes the one variable dropped. This is because LASSO penalizes large coefficients. For example, `glm` model excluding `rm` is:
+
+
+
+This is interesting because we can see how different the coefficients are even though it has the same variables.
+
+
+
+## Lasso with scaled variable
+
+
+# Apendix
+
+```{r appendix, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+``` 
+
