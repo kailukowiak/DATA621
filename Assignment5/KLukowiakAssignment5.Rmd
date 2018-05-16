@@ -1,0 +1,393 @@
+---
+title: "Assignment 5"
+author: "Kai Lukowiak"
+date: '2018-03-25'
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    latex_engine: xelatex
+abstract: "This paper tries to predict the number of cases of wine bought based on certain characteristics of the wine."
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(caTools)
+library(corrplot)
+library(knitr)
+library(psych)
+library(kableExtra)
+library(ggthemes)
+library(pander)
+library(memisc)
+library(mice)
+```
+
+The variables, definitions, and theoretical effects are listed below:
+
+```{r}
+dd <- read_csv("/Users/kailukowiak/DATA621/Assignments/Assignment5/Datadict.csv")
+dd <- dd %>% 
+  filter(!is.na(`VARIABLE NAME`)) %>% 
+  replace_na(list(`THEORETICAL EFFECT` = 'No Theoretical Effect'))
+pander::pander(dd, split.cell = 80, split.table = Inf)
+```
+
+# Data Exploration
+
+Here is a transposed sample of the data.
+
+```{r}
+LabledDF <- read_csv('wine-training-data.csv')
+LabledDF <- LabledDF %>% dplyr::select(-INDEX)
+predictDF <- read_csv('wine-evaluation-data.csv')
+set.seed(101) 
+sample = sample.split(LabledDF$TARGET, SplitRatio = .75)
+df <- subset(LabledDF, sample == TRUE)
+testDF <- subset(LabledDF, sample == FALSE)
+temp <- df %>% sample_n(6)
+temp %>% t() %>%  kable()
+```
+
+The data is all numeric, however, we will need to change `TARGET` to factor for one of the regressions. 
+
+## Summary Statistics
+The summary statistics for the dataset are:
+
+```{r}
+SumTab <- summary(df)
+SumTab
+```
+
+Some of these numbers don't make a ton of sense. For example, how can there be negative alchol content?
+
+We will address this in the Data Preperation Section.
+
+## Descpritive Statistics
+
+The descriptive statistics are:
+
+```{r}
+dis <- describe(df)
+dis
+```
+
+There are quite a few `NA` values:
+
+```{r}
+temp <- map(df, ~sum(is.na(.))) 
+temp <- as.data.frame(temp)
+temp %>% t() %>% kable()
+
+```
+
+The total percent of rows that have at least on `NA` value is `r round(sum(as.numeric(complete.cases(df)))/ nrow(df) *100)`%.  There is a also significant correlation between NA values and the Target purchase amount. This is problematic for us because dropping the NA rows will result in a biased estimate. Given the high percent of `NA` values and the correlation between missing values and the target, we will have to impute.
+
+We will have to impute the missing values, but first it's important to make sure the the NA values don't have an explanation. We will explore this more in further sections.
+
+# Graphical EDA
+
+```{r}
+df %>% 
+  scale() %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  ggplot(aes(x = key, y = value)) +
+  theme_tufte() +
+  geom_violin()+
+  #geom_tufteboxplot(outlier.colour="black")+
+  theme(axis.title=element_blank()) +
+  ylab('Scaled Values')+
+  xlab('Variable')+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ggtitle('Distrobution of Values', subtitle = 'Y values scaled to fit a common axis')
+```
+
+```{r}
+df %>% 
+  scale() %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  ggplot(aes(x = key, y = value)) +
+  # geom_violin()+
+  # geom_tufteboxplot(outlier.colour="black", outlier.shape = 22)+
+  geom_boxplot()+
+  theme_tufte() +
+  theme(axis.title=element_blank()) +
+  ylab('Scaled Values')+
+  xlab('Variable')+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ggtitle('Distrobution of Values', subtitle = 'Y values scaled to fit a common axis')
+```
+
+Both the violin and box plots show that most of the variables are normally distributed. 
+
+`AcidIndex` seems to be skewed slightly. It also has a skew of 1.68. This is not enought to worry about. 
+
+```{r}
+df %>% 
+  gather() %>% 
+  ggplot(aes(x=value))+
+  geom_histogram()+
+  facet_wrap(~key,scales='free')+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  theme_tufte()
+```
+
+This histogram of the target:
+
+
+```{r}
+ggplot(data = df, aes(x=TARGET)) + 
+  geom_histogram() +
+  ggtitle('Histogram of Target Variable') +
+  theme_tufte() 
+```
+
+Assides from many wines not being ordered, there rest of the distribution looks normal. We will explor various different models that might deal with this.
+
+
+Scatter plots against `TARGET`:
+
+```{r}
+df %>%
+  gather(-TARGET, key = "key", value = "ResponseVariables") %>%
+  ggplot(aes(x = ResponseVariables, y = TARGET)) +
+  geom_point(size = .5) +
+  geom_smooth(method='lm',formula=y~x, color = 'dark grey')+
+  facet_wrap(~ key, scales = "free")+
+  theme_tufte()+
+  ylab('Cases Bought')
+```
+
+There don't seem to be any crazy patterns here. It mostly looks linear which is a good sign for us. `STARS` and `LableAppleal` look like they have the greatest correlation.
+
+ 
+
+Correlation Matrix:
+
+```{r}
+corr <- round(cor(df, use= 'complete.obs'), 2) 
+corrplot.mixed(corr, lower.col = 'grey', tl.pos = 'lt' ,upper.col = gray.colors(100), tl.col = 'grey')
+```
+
+
+The correlation matrix shows that most values are not that highly correlated. 
+
+
+# Data Preperation
+
+We will use the `mice` package to impute missing values.
+
+```{r}
+imputed <- mice(df, m=1, maxit = 5, seed = 42)
+imputed <- complete(imputed)
+imputed <- as.data.frame(imputed)
+
+testImput <- test <- mice(testDF, m=1, maxit = 5, seed = 42)
+testImput <- complete(testImput)
+testImput <- as.data.frame(imputed)
+```
+
+
+## Log Transforms
+
+Given the low correlation between `AcidIndex` and `TARGET` it might not make a huge difference, however, we will log transform it to test. 
+
+```{r}
+dfFALog <- df %>% 
+  mutate(AcidIndex = log(AcidIndex))
+```
+
+## Negative Values
+There are several variables with negative values that don't necessarily make sense. I am assuming this is due to a normalization procedure. 
+
+Thus, transforming them would introduce bias into the model. 
+
+# Building Models
+
+We will build a variety of models using both the imputed and non-imputed data.
+
+## Poisson 1
+
+Theoretically, these models should work well given the ranked data. 
+
+```{r}
+mod1 = glm(TARGET ~  ., data=imputed, family=poisson)
+summary(mod1)
+```
+
+```{r}
+plot(mod1)
+```
+
+
+There are some weird diagnostic plots but I don't think there is a ton we can do about that. Also, the lines in the plots are mostly due to the 'categorical' nature of the `TARGET`.
+
+## Poisson with Imputation
+
+```{r}
+mod2 <-  glm(TARGET ~  ., data=imputed, family=poisson)
+summary(mod2)
+```
+
+
+
+```{r}
+plot(mod2)
+```
+
+Both these models have similar AICs. I am more comfortable using the imputed data because I think removing a large number of rows will be detrimental.
+
+
+## Negative Binomial
+
+The Negative Binomial distrobution should also perform well on count variables. 
+
+```{r}
+mod3 <- glm.nb(TARGET ~ ., data = imputed)
+summary(mod3)
+plot(mod3)
+```
+
+
+## Linear Model
+
+While `TARGET` could be considered a linear response variable, I initially thought it would be a poorer predictor compared to Poisson based models. 
+
+However, it actually performed quite well. I think this is because the counts are tighly grouped. If there was more disperse counts, say up to 100 and with few examples of these disperse numbers, I would guess this model would not perform as well.
+
+```{r}
+mod4 <- lm(TARGET ~ ., data = imputed)
+summary(mod4)
+plot(mod4)
+```
+
+
+## Ordinal Logistic Regression
+
+This regression uses ordered factors. I would expect this to be one of the top performers.
+
+```{r}
+polrDF <- imputed
+polrDF$TARGET <- as.factor(polrDF$TARGET)
+mod5 <- polr(TARGET ~ ., data = polrDF, Hess=TRUE)
+summary(mod5)
+```
+
+
+## Zero inflation 
+
+
+Zero inflation understands that some Poisson distrobutions are dominated by many zeros. As such it corrects for this. This is one of the most promissing ones because as we saw in our data exploration, there were more zeros, and then normally distributed data after that. 
+
+```{r}
+library(pscl)
+mod6 <- zeroinfl(TARGET ~ . | STARS, data = imputed, dist = 'negbin')
+mod6
+```
+
+```{r}
+scatterPreds <- predict(mod6, imputed)
+qplot(imputed$TARGET, scatterPreds, main = 'Predicted vs Actual') + theme_tufte()
+
+residPlot <- scatterPreds - imputed$TARGET
+qplot(imputed$TARGET, residPlot, main = 'Residuals') + theme_tufte()
+```
+
+
+
+# Model Selection
+
+```{r}
+modelValidation <- function(mod, test){
+  preds = predict(mod, test)
+  diffMat = as.numeric(preds) - as.numeric(test$TARGET)
+  diffMat = diffMat^2
+  loss <- mean(diffMat)
+  return(loss)
+}
+
+```
+
+We will use the squared difference two select a model (MSE) from predictions on the training sets. (Lower numbers are better.)
+
+## GLM Poisson (Imputed)
+
+A regular Poisson regression does not perform very well.
+
+```{r}
+modelValidation(mod2, testImput)
+```
+
+##  Negative Binomial
+
+The same can be said for the Negative Binomial.
+
+```{r}
+modelValidation(mod3, testImput)
+```
+
+## Linear
+
+The linear model actually performs very well. As I talked about earlier, this is not totally surprising. 
+
+```{r}
+modelValidation(mod4, testImput)
+```
+
+
+## Ordenal Logistic Regression
+
+Very surprisinly, this does not work as well as the linear model. 
+
+```{r}
+polrDFTest <- testImput
+polrDFTest$TARGET <- as.factor(polrDFTest$TARGET)
+modelValidation(mod5, polrDFTest)
+```
+
+## Zero Inflatiion
+
+Zero inflation lives up to it's name. It deals with the zero heavy results very nicely.
+
+```{r}
+modelValidation(mod6, testImput)
+```
+
+Because we are not interested in gaining insight into the underlying causes of wine selection, we will use the squared loss. This will tell us how accurate our model is without caring about confidence intervals etc.
+
+Based on this metric, Zero Poission Inflation is the most accurate. 
+
+
+# Prediction
+
+Predicting using new data:
+
+This model uses the same imputation process as above. 
+
+```{r}
+
+predImputed <- mice(predictDF, m=1, maxit = 5, seed = 42)
+predImputed <- complete(predImputed)
+predImputed <- as.data.frame(predImputed)
+
+zipPreds <- predict(mod6, predImputed)
+zipPreds <- as_data_frame(zipPreds)
+colnames(zipPreds) <- 'Predicted'
+zipPreds$Rounded <- round(zipPreds$Predicted)
+zipPreds %>% head() %>% kable()
+```
+
+# Appendix
+
+```{r appendix, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+``` 
